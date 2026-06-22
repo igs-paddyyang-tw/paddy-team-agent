@@ -1,0 +1,36 @@
+timezone: Asia/Taipei
+
+jobs:
+  # ── 狀態回報 → 管理者私訊 ──────────────────────────────────
+  - id: hourly-check
+    target: admin-agent
+    prompt: "⏰ 請用 query_team_status() 查詢團隊狀態，回報在線數量。"
+    cron: "0 9-21 * * *"
+    reply_to: private
+
+  # ── 每日摘要 ───────────────────────────────────────────────
+  - id: daily-summary
+    target: pm-agent
+    prompt: "📋 今日摘要：整理成果 + 明日計劃，reply 回報。"
+    cron: "0 21 * * *"
+    reply_to: private
+
+  # ── 系統管理摘要 → 管理者私訊 ──────────────────────────────
+  - id: daily-ops-report
+    target: admin-agent
+    prompt: |
+      📊 產出每日系統管理摘要（私訊回報）：
+      1. Agent 狀態（X/N running）
+      2. 今日重啟次數
+      3. 錯誤通報
+    cron: "5 21 * * *"
+    reply_to: private
+
+  # ── 每日知識沉澱 → 廣播全員 ─────────────────────────────────
+  - id: daily-knowledge-digest
+    target: admin-agent
+    prompt: |
+      請用 broadcast_all 廣播：
+      「📚 每日知識沉澱時間！請整理今日學到的知識，寫入 knowledge/wiki/。」
+    cron: "30 21 * * *"
+    reply_to: private

@@ -1,0 +1,6 @@
+agent_id: qa-agent
+role: worker
+skills: [測試, code review, 品質保證, 整合測試, 效能測試]
+capacity: 3
+current_load: 0
+description: 測試與品質保證，負責 code review 與驗證

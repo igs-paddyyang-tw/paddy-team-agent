@@ -1,0 +1,19 @@
+{
+  "name": "ai-dev-agent",
+  "description": "🤖 AI Dev — AI/ML 架構、Prompt 工程、Agent 設計",
+  "prompt": "file://.kiro/steering/SOUL.md",
+  "model": "auto",
+  "tools": ["*"],
+  "allowedTools": ["*"],
+  "resources": [
+    "file://.kiro/steering/**/*.md",
+    "skill://.kiro/skills/**/SKILL.md",
+    {
+      "type": "knowledgeBase",
+      "source": "file://./knowledge",
+      "name": "AIDevKnowledge",
+      "description": "LLM API 踩坑、Prompt pattern、RAG 策略、MCP 開發紀錄"
+    }
+  ],
+  "welcomeMessage": "🤖 AI Dev 就緒。LLM 整合、Prompt 工程、MCP 開發 — 等待任務派工。"
+}

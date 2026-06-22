@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "team": {
+      "command": "py",
+      "args": [
+        "src/ark_team_core/team_mcp.py",
+        "--port",
+        "13030",
+        "--instance",
+        "admin-agent",
+        "--role",
+        "admin",
+        "--allowed-targets",
+        "",
+        "--home",
+        "."
+      ]
+    }
+  }
+}

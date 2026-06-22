@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ark Agent Platform 執行計畫</title>
+<style>
+:root{--primary:#2563eb;--bg:#f8fafc;--card:#fff;--border:#e2e8f0;--text:#1e293b;--muted:#64748b}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding:2rem}
+.container{max-width:1100px;margin:0 auto}
+h1{font-size:1.8rem;color:var(--primary);margin-bottom:.5rem}
+h2{font-size:1.4rem;margin:2rem 0 1rem;padding-bottom:.5rem;border-bottom:2px solid var(--primary)}
+h3{font-size:1.1rem;margin:1.5rem 0 .8rem;color:var(--primary)}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.85rem}
+th,td{border:1px solid var(--border);padding:.5rem .7rem;text-align:left}
+th{background:var(--primary);color:#fff;font-weight:600}
+tr:nth-child(even){background:#f1f5f9}
+.meta{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1rem;margin:1rem 0;font-size:.85rem;color:var(--muted)}
+.meta span{margin-right:1.5rem}
+.phase{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin:1.5rem 0}
+.deliverable{background:#f0f9ff;border-left:4px solid var(--primary);padding:.8rem 1rem;margin:.8rem 0;font-size:.85rem}
+.deliverable code{background:#e2e8f0;padding:.1rem .3rem;border-radius:3px;font-size:.8rem}
+.risk-H{color:#dc2626;font-weight:700}
+.risk-M{color:#d97706;font-weight:700}
+.risk-L{color:#16a34a;font-weight:700}
+.summary{background:linear-gradient(135deg,#eff6ff,#dbeafe);border-radius:8px;padding:1.5rem;margin:1rem 0}
+ul,ol{margin:.5rem 0 .5rem 1.5rem}
+li{margin:.3rem 0}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>Ark Agent Platform — 執行計畫</h1>
+<div class="meta">
+<span>📋 版本: 1.0</span>
+<span>📅 建立: 2026-06-17</span>
+<span>👤 作者: paddyyang</span>
+<span>🏷️ 狀態: Draft</span>
+</div>
+
+<div class="summary">
+<p>將現有 <code>ark-agent-team-builder</code>（282 行最小 daemon）升級為完整的 AI Agent 管理平台，包含 Backend API（FastAPI + PostgreSQL + Event Bus）和 Telegram Rich UI（11 指令 + 通知 + InlineKeyboard），預計 <strong>6 週</strong>交付 MVP，支援 5 人 AI 團隊的完整派工、監控、費用追蹤與審計功能。</p>
+</div>
+
+<h2>2. 里程碑（Milestones）</h2>
+
+<div class="phase">
+<h3>Phase 1: Backend 基礎建設（Week 1）</h3>
+<table>
+<tr><th>任務</th><th>負責人</th><th>工時</th><th>依賴</th><th>驗收條件</th></tr>
+<tr><td>DB schema 設計 + migration</td><td>coder-agent</td><td>4h</td><td>無</td><td>6 張表建立成功，migration 可重複執行</td></tr>
+<tr><td>EventBus 實作</td><td>ai-dev-agent</td><td>4h</td><td>無</td><td>14 種事件 emit/subscribe 通過單元測試</td></tr>
+<tr><td>FastAPI router + middleware</td><td>coder-agent</td><td>4h</td><td>DB</td><td>health endpoint 回 200</td></tr>
+<tr><td>Agents CRUD API</td><td>coder-agent</td><td>4h</td><td>router</td><td>POST/GET/DELETE agents 通過</td></tr>
+<tr><td>Issues lifecycle API</td><td>coder-agent</td><td>6h</td><td>router + DB</td><td>create/assign/complete/fail 全通過</td></tr>
+<tr><td>WebSocket endpoint</td><td>ai-dev-agent</td><td>4h</td><td>EventBus</td><td>client 連線後收到即時事件</td></tr>
+<tr><td>整合測試</td><td>qa-agent</td><td>4h</td><td>全部</td><td>10 個 API test cases 通過</td></tr>
+</table>
+<div class="deliverable"><strong>交付物：</strong><br>
+<code>src/backend/db/models.py</code> · <code>src/backend/db/migrations/001_init.sql</code> · <code>src/backend/events/bus.py</code> · <code>src/backend/events/types.py</code> · <code>src/backend/api/router.py</code> · <code>src/backend/api/agents.py</code> · <code>src/backend/api/issues.py</code> · <code>src/backend/api/ws.py</code> · <code>tests/test_api.py</code>
+</div>
+</div>
+
+<div class="phase">
+<h3>Phase 2: Backend 服務完整化（Week 2）</h3>
+<table>
+<tr><th>任務</th><th>負責人</th><th>工時</th><th>依賴</th><th>驗收條件</th></tr>
+<tr><td>Dashboard stats + trends API</td><td>coder-agent</td><td>4h</td><td>DB</td><td>回傳正確聚合數據</td></tr>
+<tr><td>Session Inspector API</td><td>coder-agent</td><td>6h</td><td>DB</td><td>session list + turn detail 正確</td></tr>
+<tr><td>Cost Tracker service</td><td>ai-dev-agent</td><td>4h</td><td>EventBus + DB</td><td>agent.output 後自動記錄費用</td></tr>
+<tr><td>Audit Logger service</td><td>ai-dev-agent</td><td>4h</td><td>EventBus + DB</td><td>所有 mutation 自動記錄</td></tr>
+<tr><td>Health Monitor</td><td>coder-agent</td><td>4h</td><td>daemon + EventBus</td><td>離線 agent 自動重啟 + 發事件</td></tr>
+<tr><td>Queue Manager API</td><td>coder-agent</td><td>4h</td><td>DB</td><td>priority CRUD + batch ops</td></tr>
+<tr><td>Budget warning logic</td><td>ai-dev-agent</td><td>2h</td><td>Cost Tracker</td><td>超閾值自動 emit 事件</td></tr>
+<tr><td>Phase 2 測試</td><td>qa-agent</td><td>4h</td><td>全部</td><td>Admin API 15 端點全通過</td></tr>
+</table>
+<div class="deliverable"><strong>交付物：</strong><br>
+<code>src/backend/api/admin.py</code> · <code>src/backend/services/cost_tracker.py</code> · <code>src/backend/services/audit_logger.py</code> · <code>src/backend/services/health_monitor.py</code> · <code>tests/test_admin.py</code> · <code>tests/test_services.py</code>
+</div>
+</div>
+
+<div class="phase">
+<h3>Phase 3: Telegram UI 基礎（Week 3）</h3>
+<table>
+<tr><th>任務</th><th>負責人</th><th>工時</th><th>依賴</th><th>驗收條件</th></tr>
+<tr><td>Bot 骨架 + /start /status /agents</td><td>coder-agent</td><td>4h</td><td>Backend API</td><td>Bot 啟動、3 指令回覆正確</td></tr>
+<tr><td>/board /costs /queue 指令</td><td>coder-agent</td><td>4h</td><td>Admin API</td><td>查詢類指令回傳格式化卡片</td></tr>
+<tr><td>Formatters（5 種卡片模板）</td><td>ai-dev-agent</td><td>4h</td><td>無</td><td>status/completed/board/cost/blocker 模板正確</td></tr>
+<tr><td>/assign 流程 + InlineKeyboard</td><td>coder-agent</td><td>6h</td><td>Issues API</td><td>完整派工 flow 可操作</td></tr>
+<tr><td>自然語言路由（@mention）</td><td>ai-dev-agent</td><td>4h</td><td>無</td><td>@agent_name 正確路由</td></tr>
+<tr><td>TG 整合測試</td><td>qa-agent</td><td>4h</td><td>全部</td><td>11 指令全部可用</td></tr>
+</table>
+<div class="deliverable"><strong>交付物：</strong><br>
+<code>src/telegram/bot.py</code> · <code>src/telegram/handlers/commands.py</code> · <code>src/telegram/handlers/messages.py</code> · <code>src/telegram/handlers/callbacks.py</code> · <code>src/telegram/formatters.py</code> · <code>src/telegram/keyboards.py</code>
+</div>
+</div>
+
+<div class="phase">
+<h3>Phase 4: Telegram 互動 + 通知（Week 4）</h3>
+<table>
+<tr><th>任務</th><th>負責人</th><th>工時</th><th>依賴</th><th>驗收條件</th></tr>
+<tr><td>NotificationService（EventBus → TG）</td><td>ai-dev-agent</td><td>6h</td><td>EventBus</td><td>6 種事件正確推送</td></tr>
+<tr><td>任務完成/失敗/blocker 通知</td><td>coder-agent</td><td>4h</td><td>Notification</td><td>即時收到格式化通知</td></tr>
+<tr><td>Progress 更新器（edit_message）</td><td>coder-agent</td><td>4h</td><td>無</td><td>進度條即時刷新</td></tr>
+<tr><td>Group Topics 路由</td><td>ai-dev-agent</td><td>4h</td><td>TG API</td><td>每 agent 回覆進入正確 topic</td></tr>
+<tr><td>審批 flow + /stop /retry /logs</td><td>coder-agent</td><td>4h</td><td>Issues API</td><td>操作指令全通過</td></tr>
+<tr><td>每日摘要排程</td><td>coder-agent</td><td>2h</td><td>Scheduler</td><td>21:00 自動推送</td></tr>
+<tr><td>Phase 4 測試</td><td>qa-agent</td><td>4h</td><td>全部</td><td>通知延遲 < 5s</td></tr>
+</table>
+<div class="deliverable"><strong>交付物：</strong><br>
+<code>src/telegram/notifications.py</code> · <code>src/telegram/progress.py</code> · 6 種通知模板 · Group Topics 路由
+</div>
+</div>
+
+<div class="phase">
+<h3>Phase 5: 端到端整合（Week 5）</h3>
+<table>
+<tr><th>任務</th><th>負責人</th><th>工時</th><th>依賴</th><th>驗收條件</th></tr>
+<tr><td>process.py → EventBus 串接</td><td>ai-dev-agent</td><td>4h</td><td>EventBus</td><td>spawn 完成自動 emit</td></tr>
+<tr><td>TG commands → Backend API 串接</td><td>coder-agent</td><td>4h</td><td>全部</td><td>指令經 API 操作 DB</td></tr>
+<tr><td>WebSocket → TG 通知完整流程</td><td>ai-dev-agent</td><td>4h</td><td>WS + Notification</td><td>event 從 daemon 到 TG 完整鏈路</td></tr>
+<tr><td>start.py 統一入口重構</td><td>coder-agent</td><td>4h</td><td>全部</td><td>單指令啟動全平台</td></tr>
+<tr><td>端到端整合測試</td><td>qa-agent</td><td>8h</td><td>全部</td><td>派工 → 執行 → 通知 完整 flow</td></tr>
+</table>
+<div class="deliverable"><strong>交付物：</strong><br>
+<code>ark_team_core/</code> 升級版 · <code>start.py</code> 統一入口 · <code>tests/test_integration.py</code> · 完整派工流程可 demo
+</div>
+</div>
+
+<div class="phase">
+<h3>Phase 6: 打磨 + 部署（Week 6）</h3>
+<table>
+<tr><th>任務</th><th>負責人</th><th>工時</th><th>依賴</th><th>驗收條件</th></tr>
+<tr><td>RBAC 權限控制</td><td>ai-dev-agent</td><td>4h</td><td>API</td><td>admin/member/viewer 三級生效</td></tr>
+<tr><td>Docker Compose 生產配置</td><td>coder-agent</td><td>4h</td><td>全部</td><td>docker compose up 一鍵啟動</td></tr>
+<tr><td>E2E 自動化測試</td><td>qa-agent</td><td>6h</td><td>全部</td><td>CI 綠燈</td></tr>
+<tr><td>效能壓測</td><td>qa-agent</td><td>4h</td><td>全部</td><td>50 agents / P95 < 200ms</td></tr>
+<tr><td>文件更新</td><td>pm-agent</td><td>4h</td><td>全部</td><td>README + API docs + CHANGELOG</td></tr>
+<tr><td>安全性掃描</td><td>qa-agent</td><td>2h</td><td>全部</td><td>0 critical issues</td></tr>
+</table>
+<div class="deliverable"><strong>交付物：</strong><br>
+<code>src/backend/api/auth.py</code> · <code>docker-compose.prod.yml</code> · <code>e2e/</code> Playwright 測試 · 壓測報告 · <code>README.md</code> + <code>CHANGELOG.md</code>
+</div>
+</div>
+
+<h2>3. 風險管理</h2>
+<table>
+<tr><th>風險</th><th>機率</th><th>影響</th><th>緩解策略</th><th>觸發條件</th></tr>
+<tr><td>kiro-cli 版本不相容</td><td class="risk-M">M</td><td class="risk-H">H</td><td>Pin 版本 + 啟動前 version check</td><td>spawn 失敗率 > 20%</td></tr>
+<tr><td>LLM 費用失控</td><td class="risk-H">H</td><td class="risk-H">H</td><td>cost_guard + budget warning + 自動暫停</td><td>日費超過設定值</td></tr>
+<tr><td>SQLite 併發瓶頸</td><td class="risk-L">L</td><td class="risk-M">M</td><td>開發用 SQLite、生產切 PostgreSQL</td><td>寫入衝突 > 5/min</td></tr>
+<tr><td>Telegram API 限流</td><td class="risk-M">M</td><td class="risk-M">M</td><td>訊息佇列 + 500ms 節流</td><td>429 錯誤 > 3 次/min</td></tr>
+<tr><td>Event Bus 記憶體洩漏</td><td class="risk-L">L</td><td class="risk-H">H</td><td>Queue maxsize=10000 + 定期 drain</td><td>記憶體 > 1GB</td></tr>
+<tr><td>整合階段延遲</td><td class="risk-M">M</td><td class="risk-M">M</td><td>Phase 5 預留 buffer + 可砍 Group Topics</td><td>W5 開始仍有 > 3 blocker</td></tr>
+<tr><td>Agent 回應品質不穩</td><td class="risk-M">M</td><td class="risk-L">L</td><td>重試機制 + fallback 到備選模型</td><td>連續失敗 > 3 次</td></tr>
+</table>
+
+<h2>4. 驗證標準</h2>
+<table>
+<tr><th>類別</th><th>指標</th><th>目標</th><th>驗證方式</th></tr>
+<tr><td>單元測試</td><td>覆蓋率</td><td>> 80%</td><td>pytest --cov</td></tr>
+<tr><td>API 測試</td><td>端點覆蓋</td><td>15/15 端點通過</td><td>pytest tests/test_api.py</td></tr>
+<tr><td>整合測試</td><td>派工 E2E</td><td>TG 發訊 → Agent 完成 → TG 通知 < 3 min</td><td>手動 + 自動</td></tr>
+<tr><td>效能</td><td>P95 延遲</td><td>< 200ms（API）/ < 5s（通知）</td><td>k6 壓測</td></tr>
+<tr><td>安全性</td><td>漏洞掃描</td><td>0 critical</td><td>bandit + safety</td></tr>
+<tr><td>穩定性</td><td>持續運行</td><td>24h 無 crash</td><td>daemon 監控</td></tr>
+<tr><td>費用準確度</td><td>追蹤誤差</td><td>< 10% vs 實際帳單</td><td>月底比對</td></tr>
+</table>
+
+<h2>5. 回滾計畫</h2>
+<table>
+<tr><th>觸發條件</th><th>回滾步驟</th><th>預估時間</th><th>負責人</th></tr>
+<tr><td>API 啟動失敗</td><td>還原 start.py 到舊版（純 daemon）</td><td>2 min</td><td>admin-agent</td></tr>
+<tr><td>DB migration 失敗</td><td>alembic downgrade -1</td><td>1 min</td><td>coder-agent</td></tr>
+<tr><td>TG Bot 異常</td><td>停用 TG adapter，HTTP API 仍可用</td><td>即時</td><td>admin-agent</td></tr>
+<tr><td>費用暴衝</td><td>cost_guard 自動暫停所有 agent</td><td>即時（自動）</td><td>system</td></tr>
+<tr><td>整合完全失敗</td><td>回退到 Phase 0（純 daemon + 簡易 TG）</td><td>5 min</td><td>admin-agent</td></tr>
+</table>
+
+<h2>6. 依賴與前置條件</h2>
+<h3>外部依賴</h3>
+<table>
+<tr><th>依賴</th><th>版本</th><th>用途</th></tr>
+<tr><td>Python</td><td>3.12+</td><td>Runtime</td></tr>
+<tr><td>PostgreSQL</td><td>17（生產）/ SQLite（開發）</td><td>持久化</td></tr>
+<tr><td>kiro-cli</td><td>2.7+</td><td>Agent 引擎</td></tr>
+<tr><td>python-telegram-bot</td><td>22+</td><td>Telegram API</td></tr>
+<tr><td>FastAPI</td><td>0.110+</td><td>REST API</td></tr>
+<tr><td>uvicorn</td><td>0.27+</td><td>ASGI server</td></tr>
+<tr><td>SQLAlchemy</td><td>2.0+</td><td>ORM</td></tr>
+<tr><td>APScheduler</td><td>3.10+</td><td>排程</td></tr>
+</table>
+
+<h3>環境需求</h3>
+<ul>
+<li>Telegram Bot Token（@BotFather）</li>
+<li>網路存取（Telegram API + LLM API）</li>
+<li>磁碟 > 1GB（日誌 + DB）</li>
+<li>RAM > 2GB（5 agents 併發）</li>
+</ul>
+
+<h3>人力需求</h3>
+<table>
+<tr><th>角色</th><th>職責</th><th>負荷</th></tr>
+<tr><td>pm-agent (leader)</td><td>需求釐清、驗收、每日 standup</td><td>20%</td></tr>
+<tr><td>ai-dev-agent</td><td>架構設計、Event Bus、通知、AI 整合</td><td>100% W1-5</td></tr>
+<tr><td>coder-agent</td><td>API 開發、TG 指令、CRUD、整合</td><td>100% W1-6</td></tr>
+<tr><td>qa-agent</td><td>測試、壓測、安全掃描</td><td>50% W1-4, 100% W5-6</td></tr>
+<tr><td>admin-agent</td><td>部署、監控、回滾</td><td>20%</td></tr>
+</table>
+
+<h2>7. 溝通計畫</h2>
+<table>
+<tr><th>事件</th><th>通知對象</th><th>管道</th><th>頻率</th></tr>
+<tr><td>每日進度</td><td>全團隊</td><td>TG Group /Daily Report topic</td><td>每日 21:00</td></tr>
+<tr><td>Phase 完成</td><td>pm-agent + admin</td><td>TG 私訊</td><td>每週</td></tr>
+<tr><td>Blocker 升級</td><td>pm-agent</td><td>TG 即時通知</td><td>即時</td></tr>
+<tr><td>風險觸發</td><td>admin-agent</td><td>TG ⚠️ Alerts topic</td><td>即時</td></tr>
+<tr><td>MVP Demo</td><td>全員</td><td>螢幕分享</td><td>W3 + W6</td></tr>
+<tr><td>上線通知</td><td>全員</td><td>TG 公告</td><td>一次</td></tr>
+</table>
+
+<h2>8. 成功標準</h2>
+<table>
+<tr><th>指標</th><th>MVP 目標</th><th>衡量</th></tr>
+<tr><td>派工到完成</td><td>TG 發訊 → 收到結果 < 3 min（簡單任務）</td><td>E2E 計時</td></tr>
+<tr><td>指令回應</td><td>TG 指令 → 回覆 < 2s</td><td>日誌</td></tr>
+<tr><td>通知即時性</td><td>事件 → TG 推送 < 5s</td><td>Event timestamp diff</td></tr>
+<tr><td>費用透明度</td><td>每次 spawn 都有費用記錄</td><td>DB record count = spawn count</td></tr>
+<tr><td>穩定性</td><td>24h 無人值守不 crash</td><td>uptime 監控</td></tr>
+<tr><td>使用者滿意</td><td>能用 TG 完成 80% 的日常操作</td><td>人工驗證</td></tr>
+</table>
+
+<h2>9. 開放問題</h2>
+<table>
+<tr><th>#</th><th>問題</th><th>決策時限</th><th>影響</th></tr>
+<tr><td>1</td><td>SQLite vs PostgreSQL for MVP？</td><td>W1 D1</td><td>如果只用 SQLite，Phase 6 壓測可能受限</td></tr>
+<tr><td>2</td><td>Token 計數用估算還是精確計算？</td><td>W2 D1</td><td>精確需 tiktoken，估算用 chars/4</td></tr>
+<tr><td>3</td><td>Group Topics 是否列入 MVP？</td><td>W3 結束</td><td>可延後到 v1.1</td></tr>
+<tr><td>4</td><td>是否整合 Multica Cloud API？</td><td>W5</td><td>整合可共享 Web Dashboard，不整合獨立運作</td></tr>
+</table>
+
+</div>
+</body>
+</html>

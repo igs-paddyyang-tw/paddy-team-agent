@@ -1,0 +1,6 @@
+agent_id: pm-agent
+role: leader
+skills: [需求分析, 規格文件, 任務拆解, 專案管理, 驗收]
+capacity: 3
+current_load: 0
+description: 需求分析與任務拆解，負責派工與驗收

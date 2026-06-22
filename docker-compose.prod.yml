@@ -1,0 +1,78 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ark_platform
+      POSTGRES_USER: ark
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-ark_secret}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ark"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command: python -m uvicorn backend.api.router:app --host 0.0.0.0 --port 33333
+    environment:
+      - DATABASE_URL=postgresql://ark:${POSTGRES_PASSWORD:-ark_secret}@postgres:5432/ark_platform
+      - PLATFORM_API_KEYS=${PLATFORM_API_KEYS:-}
+      - API_PORT=33333
+    ports:
+      - "33333:33333"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    working_dir: /app
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+
+  telegram-bot:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command: python start_platform.py
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+      - API_PORT=33333
+      - PLATFORM_API_KEYS=${PLATFORM_API_KEYS:-}
+    depends_on:
+      - backend
+    working_dir: /app
+    volumes:
+      - ./agents:/app/agents
+      - ./team.yaml:/app/team.yaml
+      - ./scheduler.yaml:/app/scheduler.yaml
+      - ./data:/app/data
+      - ./logs:/app/logs
+
+  agent-daemon:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    command: python -c "import asyncio; from ark_team_core.daemon import CoreDaemon; d=CoreDaemon(); asyncio.run(d.run())"
+    environment:
+      - TELEGRAM_BOT_TOKEN=${TELEGRAM_BOT_TOKEN}
+    depends_on:
+      - backend
+    working_dir: /app
+    volumes:
+      - ./agents:/app/agents
+      - ./team.yaml:/app/team.yaml
+      - ./logs:/app/logs
+
+volumes:
+  pgdata:

@@ -1,0 +1,76 @@
+# Agent Team 配置
+# 啟動：python start.py
+
+# 團隊名稱（顯示在 Telegram 啟動訊息）
+name: "AI Team Agent"
+
+# 啟動訊息範例（顯示在 /start 指令）
+examples:
+  - "「規劃新功能」→ 需求分析派工"
+  - "「寫一個 API」→ 程式開發"
+  - "「今日科技新聞」→ 市場研究"
+  - "「@leader 拆解任務」→ 指定 agent"
+
+channel:
+  bot_token_env: TELEGRAM_BOT_TOKEN
+  # group_id: -100xxxxxxxxxx        # 有值 = Group Topics；無值 = 純私聊 @mention
+  # general_topic_id: 1
+
+# Forum Topics 定義（Group Topics 模式時使用）
+# topics:
+#   project_daily: 2    # 專案日報
+#   news_daily: 3       # 新聞日報
+#   assistant_chat: 1   # 助理對話區
+
+access:
+  mode: locked
+  allowed_users:
+    - 937896656                      # paddyyang
+
+defaults:
+  backend: kiro-cli
+  model: auto
+
+cost_guard:
+  daily_limit_usd: 30.0
+  warn_at_percentage: 80
+  timezone: Asia/Taipei
+
+hang_detector:
+  enabled: true
+  timeout_minutes: 60
+  escalation_minutes: 180
+
+instances:
+  admin-agent:
+    working_directory: agents/admin-agent
+    description: "👑 Admin — 服務管理、開發維護、團隊指揮"
+    private_chat: 937896656
+    role: admin
+    skip_resume: false
+
+  pm-agent:
+    working_directory: agents/pm-agent
+    description: "🧠 Leader — 需求分析、派工、驗收"
+    role: leader
+    skip_resume: false
+
+  ai-dev-agent:
+    working_directory: agents/ai-dev-agent
+    description: "🤖 AI Dev — AI/ML 架構、Prompt 工程、Agent 設計"
+    role: worker
+    skip_resume: false
+
+  coder-agent:
+    working_directory: agents/coder-agent
+    description: "💻 Coder — 全端開發、API 實作、程式碼產出"
+    role: worker
+    skip_resume: false
+
+  qa-agent:
+    working_directory: agents/qa-agent
+    description: "🧪 QA — 測試、品質保證、Code Review"
+    role: worker
+    skip_resume: false
+
+health_port: 33333

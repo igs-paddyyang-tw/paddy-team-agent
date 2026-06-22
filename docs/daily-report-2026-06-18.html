@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日報：AI Team Agent 專案 — 2026-06-18</title>
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--yellow:#d29922;--red:#f85149}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;padding:2rem;max-width:960px;margin:0 auto}
+h1{font-size:1.8rem;margin-bottom:.5rem}
+h2{font-size:1.4rem;margin:2rem 0 1rem;padding-bottom:.5rem;border-bottom:1px solid var(--border)}
+h3{font-size:1.1rem;margin:1.5rem 0 .5rem;color:var(--accent)}
+blockquote{background:var(--surface);border-left:4px solid var(--accent);padding:.75rem 1rem;margin:1rem 0;border-radius:4px}
+blockquote strong{color:var(--accent)}
+table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.9rem}
+th,td{padding:.6rem .8rem;border:1px solid var(--border);text-align:left}
+th{background:var(--surface);color:var(--accent);font-weight:600}
+tr:nth-child(even){background:var(--surface)}
+pre{background:var(--surface);border:1px solid var(--border);border-radius:6px;padding:1rem;overflow-x:auto;font-size:.85rem;margin:1rem 0}
+code{font-family:'Fira Code',monospace}
+ul,ol{padding-left:1.5rem;margin:.5rem 0}
+li{margin:.3rem 0}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-green{background:#1a4d2e;color:var(--green)}
+.badge-yellow{background:#3d2e00;color:var(--yellow)}
+.badge-red{background:#3d1418;color:var(--red)}
+.meta{color:var(--muted);font-size:.85rem;margin-top:3rem;text-align:center;border-top:1px solid var(--border);padding-top:1rem}
+hr{border:none;border-top:1px solid var(--border);margin:1.5rem 0}
+</style>
+</head>
+<body>
+
+<h1>📋 日報：AI Team Agent 專案</h1>
+<blockquote>
+<strong>日期</strong>：2026-06-18（四）<br>
+<strong>撰寫者</strong>：pm-agent<br>
+<strong>專案狀態</strong>：<span class="badge badge-green">🟢 開發中（MVP）</span>
+</blockquote>
+
+<h2>一、設計理念</h2>
+
+<h3>核心願景</h3>
+<p>打造 <strong>5 人 AI Agent 協作平台</strong>，透過 Telegram Bot 作為使用者入口，後端統一調度多個 AI Agent 完成需求分析、開發、測試等任務。</p>
+
+<h3>設計原則</h3>
+<table>
+<tr><th>原則</th><th>說明</th></tr>
+<tr><td>Spec-Driven</td><td>先產文件再動手，確保需求可追溯</td></tr>
+<tr><td>Event-Driven</td><td>EventBus 作為核心中樞，解耦各模組</td></tr>
+<tr><td>全 Python 棧</td><td>FastAPI + python-telegram-bot + kiro-cli，統一技術棧</td></tr>
+<tr><td>漸進式架構</td><td>SQLite 開發 / PostgreSQL 生產，可隨規模升級</td></tr>
+</table>
+
+<h3>架構總覽</h3>
+<pre><code>User ─── Telegram Bot ─── Backend API :33333 ─── Agent Daemon
+              │                 │                     │
+              │            SQLite/PostgreSQL       kiro-cli × 5
+              │                 │
+              └──── EventBus ───┘</code></pre>
+
+<h3>團隊組成（5 個 Agent）</h3>
+<table>
+<tr><th>Agent</th><th>角色</th><th>職責</th></tr>
+<tr><td>admin-agent</td><td>👑 Admin</td><td>服務管理、開發維護</td></tr>
+<tr><td>pm-agent</td><td>🧠 Leader</td><td>需求分析、派工、驗收</td></tr>
+<tr><td>ai-dev-agent</td><td>🤖 AI Dev</td><td>AI/ML 架構、Prompt 工程</td></tr>
+<tr><td>coder-agent</td><td>💻 Coder</td><td>全端開發、API 實作</td></tr>
+<tr><td>qa-agent</td><td>🧪 QA</td><td>測試、品質保證</td></tr>
+</table>
+
+<h2>二、技術棧</h2>
+<table>
+<tr><th>層級</th><th>技術</th></tr>
+<tr><td>Telegram UI</td><td>python-telegram-bot 22</td></tr>
+<tr><td>Backend API</td><td>FastAPI + uvicorn</td></tr>
+<tr><td>Event Bus</td><td>asyncio pub/sub</td></tr>
+<tr><td>Services</td><td>Cost Tracker / Audit Logger / Health Monitor</td></tr>
+<tr><td>Agent Runtime</td><td>kiro-cli spawn</td></tr>
+<tr><td>Database</td><td>SQLite (dev) / PostgreSQL (prod)</td></tr>
+<tr><td>部署</td><td>Docker Compose</td></tr>
+</table>
+
+<h2>三、目前進度</h2>
+
+<h3>✅ 已完成</h3>
+<table>
+<tr><th>模組</th><th>狀態</th><th>說明</th></tr>
+<tr><td><code>src/ark_team_core/</code></td><td><span class="badge badge-green">✅</span></td><td>config / process / daemon / scheduler / mcp_registry</td></tr>
+<tr><td><code>src/backend/db/</code></td><td><span class="badge badge-green">✅</span></td><td>SQLite 初始化 + models</td></tr>
+<tr><td><code>src/backend/events/</code></td><td><span class="badge badge-green">✅</span></td><td>EventBus + EventType 定義</td></tr>
+<tr><td><code>src/backend/api/</code></td><td><span class="badge badge-green">✅</span></td><td>FastAPI router + agents/issues CRUD</td></tr>
+<tr><td><code>src/backend/services/</code></td><td><span class="badge badge-green">✅</span></td><td>cost_tracker + audit_logger</td></tr>
+<tr><td><code>src/tg_ui/</code></td><td><span class="badge badge-green">✅</span></td><td>Bot 骨架 + handlers + notifications + formatters</td></tr>
+<tr><td><code>src/a2a/</code></td><td><span class="badge badge-green">✅</span></td><td>Agent-to-Agent 協議 + router + shared memory</td></tr>
+<tr><td><code>start.py</code></td><td><span class="badge badge-green">✅</span></td><td>統一入口（一鍵啟動全平台）</td></tr>
+<tr><td>55 個 Skills</td><td><span class="badge badge-green">✅</span></td><td>涵蓋開發、文件、分析等領域</td></tr>
+</table>
+
+<h3>🟡 已啟動運行</h3>
+<ul>
+<li>平台今日 12:46 啟動成功</li>
+<li>5 個 Agent 全部就緒</li>
+<li>Scheduler + Telegram Bot + NotificationService 正常運行</li>
+<li>Backend API 在 port 33333 服務中</li>
+</ul>
+
+<h3>🔴 已知問題</h3>
+<table>
+<tr><th>問題</th><th>嚴重度</th><th>狀態</th></tr>
+<tr><td>TelegramAdapter <code>channel</code> dict vs attribute 存取</td><td><span class="badge badge-yellow">Medium</span></td><td>已識別待修</td></tr>
+<tr><td>教學包缺少 PEP 668 venv 說明</td><td><span class="badge badge-green">Low</span></td><td>文件補充</td></tr>
+</table>
+
+<h2>四、檔案結構摘要</h2>
+<pre><code>ai-team-agent/
+├── src/
+│   ├── ark_team_core/    # Agent Runtime（5 模組）
+│   ├── backend/          # FastAPI + DB + Events + Services
+│   ├── tg_ui/            # Telegram Bot UI
+│   ├── a2a/              # Agent-to-Agent 協作協議
+│   └── my_team/          # MCP Tools 業務層
+├── agents/               # 5 個 Agent 的 .kiro 配置
+├── skills/               # 55 個 Skill 定義
+├── knowledge/            # Wiki 知識庫
+├── docs/                 # 規格書 + 設計文件 + 計畫
+├── start.py              # 統一入口
+└── team.yaml             # 團隊配置</code></pre>
+
+<h2>五、今日重點</h2>
+<ol>
+<li>平台穩定運行中，全部 5 個 Agent 已就緒</li>
+<li>A2A（Agent-to-Agent）模組今日更新（feedback_loop、router、shared_memory）</li>
+<li>process.py 今日有更新（event emit 強化）</li>
+</ol>
+
+<h2>六、下一步</h2>
+<ul>
+<li>☐ 修復 TelegramAdapter channel 屬性存取 bug</li>
+<li>☐ 補充 E2E 整合測試</li>
+<li>☐ 完善 RBAC 權限控制</li>
+<li>☐ Docker 生產部署驗證</li>
+<li>☐ 效能壓力測試</li>
+</ul>
+
+<div class="meta">
+本報告由 pm-agent 自動產出 — 2026-06-18 16:40 UTC+8
+</div>
+
+</body>
+</html>

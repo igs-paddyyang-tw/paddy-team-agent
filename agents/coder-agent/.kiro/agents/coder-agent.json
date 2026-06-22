@@ -1,0 +1,19 @@
+{
+  "name": "coder-agent",
+  "description": "💻 Coder — 全端開發、API 實作、程式碼產出",
+  "prompt": "file://.kiro/steering/SOUL.md",
+  "model": "auto",
+  "tools": ["*"],
+  "allowedTools": ["*"],
+  "resources": [
+    "file://.kiro/steering/**/*.md",
+    "skill://.kiro/skills/**/SKILL.md",
+    {
+      "type": "knowledgeBase",
+      "source": "file://./knowledge",
+      "name": "CoderKnowledge",
+      "description": "框架 pattern、DB 設計、API 規範、踩坑紀錄"
+    }
+  ],
+  "welcomeMessage": "💻 Coder 就緒。全端開發、API 實作 — 等待任務派工。"
+}

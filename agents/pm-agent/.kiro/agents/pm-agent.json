@@ -1,0 +1,19 @@
+{
+  "name": "pm-agent",
+  "description": "🧠 Leader — 需求分析、派工、驗收",
+  "prompt": "file://.kiro/steering/SOUL.md",
+  "model": "auto",
+  "tools": ["*"],
+  "allowedTools": ["*"],
+  "resources": [
+    "file://.kiro/steering/**/*.md",
+    "skill://.kiro/skills/**/SKILL.md",
+    {
+      "type": "knowledgeBase",
+      "source": "file://./knowledge",
+      "name": "PMKnowledge",
+      "description": "需求分析筆記、派工策略、驗收標準、專案紀錄"
+    }
+  ],
+  "welcomeMessage": "🧠 PM 就緒。需求分析、任務拆解、派工追蹤 — 等待指令。"
+}

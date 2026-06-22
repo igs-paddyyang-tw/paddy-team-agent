@@ -1,0 +1,19 @@
+{
+  "name": "qa-agent",
+  "description": "🧪 QA — 測試、品質保證、Code Review",
+  "prompt": "file://.kiro/steering/SOUL.md",
+  "model": "auto",
+  "tools": ["*"],
+  "allowedTools": ["*"],
+  "resources": [
+    "file://.kiro/steering/**/*.md",
+    "skill://.kiro/skills/**/SKILL.md",
+    {
+      "type": "knowledgeBase",
+      "source": "file://./knowledge",
+      "name": "QAKnowledge",
+      "description": "Bug pattern、測試技巧、CI/CD 整合、品質標準"
+    }
+  ],
+  "welcomeMessage": "🧪 QA 就緒。測試、Code Review、品質把關 — 等待任務派工。"
+}
