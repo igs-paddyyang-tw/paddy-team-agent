@@ -9,7 +9,7 @@ if TYPE_CHECKING:
     from telegram.ext import Application
 
 from coordinator.events.types import Event, EventType
-from tg_ui.formatters import fmt_completed, fmt_blocker
+from gateway.telegram.formatters import fmt_completed, fmt_blocker
 
 log = logging.getLogger("notifications")
 

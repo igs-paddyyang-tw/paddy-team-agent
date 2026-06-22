@@ -169,7 +169,7 @@ class AgentProcess:
             log.info("%s completed (%d chars, %d tokens)", self.name, len(output), usage.total)
             # Parse progress markers
             try:
-                from a2a.progress_parser import parse_output
+                from coordinator.a2a.progress_parser import parse_output
                 progress_events = parse_output(output)
                 for pevt in progress_events:
                     pevt.agent_id = self.name

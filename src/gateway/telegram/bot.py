@@ -14,12 +14,12 @@ from telegram.ext import (
     CallbackQueryHandler, filters,
 )
 
-from tg_ui.handlers.commands import (
+from gateway.telegram.handlers.commands import (
     cmd_start, cmd_status, cmd_agents, cmd_board, cmd_costs, cmd_queue,
     cmd_assign, cmd_stop, cmd_retry, cmd_logs, cmd_help,
 )
-from tg_ui.handlers.messages import handle_message
-from tg_ui.handlers.callbacks import handle_callback
+from gateway.telegram.handlers.messages import handle_message
+from gateway.telegram.handlers.callbacks import handle_callback
 
 log = logging.getLogger("telegram.bot")
 

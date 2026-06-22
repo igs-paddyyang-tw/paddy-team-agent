@@ -5,9 +5,9 @@ import asyncio
 import logging
 import time
 
-from backend.db.models import get_async_db, now_iso
-from backend.events.types import Event, EventType
-from backend.events.bus import EventBus
+from coordinator.db.models import get_async_db, now_iso
+from coordinator.events.types import Event, EventType
+from coordinator.events.bus import EventBus
 
 log = logging.getLogger("health_monitor")
 

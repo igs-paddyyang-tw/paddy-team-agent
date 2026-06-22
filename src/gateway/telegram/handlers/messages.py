@@ -182,7 +182,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 await msg.reply_text(reply[:4000])
                 # 記錄到 memory
                 try:
-                    from a2a.memory_search import MemorySearch
+                    from coordinator.a2a.memory_search import MemorySearch
                     ms = MemorySearch()
                     ms.index_turn(msg.from_user.id, "user", text)
                     ms.index_turn(msg.from_user.id, "assistant", reply[:500])

@@ -96,7 +96,7 @@ class Scheduler:
     async def _emit_completed(self, job: dict, target: str) -> None:
         if not self.event_bus:
             return
-        from backend.events.types import Event, EventType
+        from coordinator.events.types import Event, EventType
         await self.event_bus.emit(Event(
             type=EventType.TASK_COMPLETED,
             data={"agent_id": target, "job_name": job.get("name", ""), "source": "scheduler"},
@@ -106,7 +106,7 @@ class Scheduler:
     async def _emit_failed(self, job: dict, target: str, error: str) -> None:
         if not self.event_bus:
             return
-        from backend.events.types import Event, EventType
+        from coordinator.events.types import Event, EventType
         await self.event_bus.emit(Event(
             type=EventType.TASK_FAILED,
             data={"agent_id": target, "job_name": job.get("name", ""), "error": error, "source": "scheduler"},
