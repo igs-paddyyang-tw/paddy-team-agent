@@ -28,7 +28,7 @@ access:
     - 937896656                      # paddyyang
 
 defaults:
-  backend: kiro-cli
+  backend: kiro
   model: auto
 
 cost_guard:

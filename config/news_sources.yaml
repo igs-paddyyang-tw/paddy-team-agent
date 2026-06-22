@@ -1,0 +1,15 @@
+sources:
+  - name: "TechCrunch"
+    url: "https://techcrunch.com/"
+    selector: "article"
+    title_sel: "h2 a, h3 a"
+
+  - name: "Hacker News"
+    url: "https://news.ycombinator.com/"
+    selector: ".athing"
+    title_sel: ".titleline a"
+
+  - name: "iThome"
+    url: "https://www.ithome.com.tw/latest"
+    selector: ".item"
+    title_sel: "h2 a, h3 a"
