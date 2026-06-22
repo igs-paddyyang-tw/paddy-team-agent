@@ -1,6 +1,6 @@
 ---
 title: "A2A 協作機制規格書"
-status: draft
+status: implemented
 type: spec
 version: "1.0"
 language: zh-TW
@@ -100,7 +100,7 @@ knowledge/shared/
 ```markdown
 ---
 task_id: task_42
-status: in_progress
+status: implemented
 assigned_to: coder-agent
 depends_on: [task_41]
 created_by: pm-agent

@@ -1,6 +1,6 @@
 ---
 title: "Ark Telegram UI/UX"
-status: draft
+status: implemented
 type: spec
 author: paddyyang
 created: 2026-06-17

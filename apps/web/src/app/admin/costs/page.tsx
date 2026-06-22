@@ -5,6 +5,17 @@ import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, Tooltip, ResponsiveCo
 
 const COLORS = ["#22d3ee", "#f59e0b", "#22c55e", "#ef4444", "#a78bfa"];
 
+function exportCSV(data: any) {
+  if (!data?.by_agent) return;
+  const rows = Object.entries(data.by_agent).map(([agent, cost]) => `${agent},${cost}`);
+  const csv = "agent,cost_usd\n" + rows.join("\n");
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = `costs-${new Date().toISOString().slice(0,10)}.csv`; a.click();
+  URL.revokeObjectURL(url);
+}
+
 export default function CostsPage() {
   const { data } = useSWR("/api/admin/costs", fetcher);
   const { data: budget } = useSWR("/api/admin/costs/budget", fetcher);
@@ -14,7 +25,12 @@ export default function CostsPage() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-2xl font-bold">Costs</h2>
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold">Costs</h2>
+        <button onClick={() => exportCSV(data)} className="px-3 py-1 text-sm bg-slate-800 hover:bg-slate-700 rounded border border-slate-600">
+          📥 匯出 CSV
+        </button>
+      </div>
 
       {/* Overview */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">

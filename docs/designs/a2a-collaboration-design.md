@@ -1,6 +1,6 @@
 ---
 title: "A2A 協作機制 — 設計文件"
-status: draft
+status: implemented
 type: design
 version: "1.0"
 language: zh-TW
@@ -187,7 +187,7 @@ class SharedMemory:
         path = self.base / "tasks" / f"{task.task_id}.md"
         content = f"""---
 task_id: {task.task_id}
-status: pending
+status: implemented
 assigned_to: {task.to_agent}
 depends_on: {task.depends_on}
 created_by: {task.from_agent}

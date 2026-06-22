@@ -1,6 +1,6 @@
 ---
 title: "AI Team Platform — 四層獨立運作架構"
-status: approved
+status: implemented
 type: spec
 version: "2.0"
 language: zh-TW

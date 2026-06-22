@@ -1,6 +1,6 @@
 ---
 title: "Ark Web Dashboard — 設計文件"
-status: draft
+status: implemented
 type: design
 version: "1.0"
 author: paddyyang

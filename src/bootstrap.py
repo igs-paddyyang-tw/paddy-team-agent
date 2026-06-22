@@ -309,7 +309,8 @@ async def main() -> None:
             BotCommand("start", "歡迎"), BotCommand("status", "狀態"),
             BotCommand("agents", "Agent 列表"), BotCommand("board", "看板"),
             BotCommand("costs", "費用"), BotCommand("queue", "佇列"),
-            BotCommand("assign", "派工"), BotCommand("restart", "重啟"),
+            BotCommand("assign", "派工"), BotCommand("stop", "停止 Agent"),
+            BotCommand("restart", "重啟 Agent"), BotCommand("logs", "查看日誌"),
             BotCommand("help", "說明"),
         ])
         await tg_app.start()
