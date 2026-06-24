@@ -16,7 +16,7 @@ from telegram.ext import (
 
 from gateway.telegram.handlers.commands import (
     cmd_start, cmd_status, cmd_agents, cmd_board, cmd_costs, cmd_queue,
-    cmd_assign, cmd_stop, cmd_retry, cmd_logs, cmd_help,
+    cmd_assign, cmd_stop, cmd_retry, cmd_unblock, cmd_logs, cmd_help,
 )
 from gateway.telegram.handlers.messages import handle_message
 from gateway.telegram.handlers.callbacks import handle_callback
@@ -33,6 +33,7 @@ BOT_COMMANDS = [
     BotCommand("assign", "派工（/assign 描述）"),
     BotCommand("stop", "中斷 Agent"),
     BotCommand("retry", "重試任務"),
+    BotCommand("unblock", "解除阻礙"),
     BotCommand("logs", "查看日誌"),
     BotCommand("help", "指令說明"),
 ]
@@ -60,6 +61,7 @@ async def create_bot(api_base_url: str = "http://127.0.0.1:33333"):
     app.add_handler(CommandHandler("assign", cmd_assign))
     app.add_handler(CommandHandler("stop", cmd_stop))
     app.add_handler(CommandHandler("retry", cmd_retry))
+    app.add_handler(CommandHandler("unblock", cmd_unblock))
     app.add_handler(CommandHandler("logs", cmd_logs))
     app.add_handler(CommandHandler("help", cmd_help))
 

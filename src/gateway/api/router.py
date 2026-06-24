@@ -17,6 +17,7 @@ from gateway.api.admin import router as admin_router
 from gateway.api.costs import router as costs_router
 from gateway.api.schedules import router as schedules_router
 from gateway.api.ws import router as ws_router
+from gateway.api.board import router as board_router
 from coordinator.services.cost_tracker import on_agent_output
 from coordinator.services.audit_logger import on_any_event
 
@@ -47,6 +48,7 @@ app.include_router(admin_router, prefix="/api/admin", tags=["admin"])
 app.include_router(costs_router, prefix="/api/costs", tags=["costs"])
 app.include_router(schedules_router, prefix="/api/schedules", tags=["schedules"])
 app.include_router(ws_router, prefix="/api", tags=["websocket"])
+app.include_router(board_router, prefix="/api", tags=["board"])
 
 @app.get("/api/health")
 def health():

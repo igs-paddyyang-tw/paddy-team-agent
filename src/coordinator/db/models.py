@@ -31,9 +31,10 @@ async def get_async_db() -> aiosqlite.Connection:
 
 
 async def init_db() -> None:
-    migration = Path(__file__).parent / "migrations" / "001_init.sql"
+    migrations_dir = Path(__file__).parent / "migrations"
     async with aiosqlite.connect(str(DB_PATH)) as conn:
-        await conn.executescript(migration.read_text(encoding="utf-8"))
+        for sql_file in sorted(migrations_dir.glob("*.sql")):
+            await conn.executescript(sql_file.read_text(encoding="utf-8"))
         await conn.commit()
 
 
@@ -61,3 +62,69 @@ async def fetch_one(conn: aiosqlite.Connection, sql: str, params: tuple = ()) ->
     cursor = await conn.execute(sql, params)
     row = await cursor.fetchone()
     return dict(row) if row else None
+
+
+# ── Task CRUD helpers ──
+
+async def create_task(conn: aiosqlite.Connection, task_id: str, title: str,
+                      assignee: str | None = None, description: str = "",
+                      priority: int = 0, source: str = "manual") -> str:
+    """建立任務。有 assignee 則自動進 QUEUED，否則 BACKLOG。"""
+    status = "queued" if assignee else "backlog"
+    ts = now_iso()
+    await insert(conn, "tasks", {
+        "id": task_id, "title": title, "description": description,
+        "status": status, "assignee": assignee, "priority": priority,
+        "source": source, "created_at": ts, "updated_at": ts,
+    })
+    await insert(conn, "task_events", {
+        "task_id": task_id, "from_status": None, "to_status": status,
+        "actor": "system", "message": f"Task created (source={source})",
+        "created_at": ts,
+    })
+    return task_id
+
+
+async def update_task_status(conn: aiosqlite.Connection, task_id: str,
+                             to_status: str, actor: str, message: str = "") -> bool:
+    """更新任務狀態 + 寫入 event。"""
+    task = await fetch_one(conn, "SELECT status FROM tasks WHERE id=?", (task_id,))
+    if not task:
+        return False
+    ts = now_iso()
+    updates = f"status=?, updated_at=?"
+    params: list[Any] = [to_status, ts]
+    if to_status == "claimed":
+        updates += ", claimed_at=?"
+        params.append(ts)
+    elif to_status in ("completed", "failed"):
+        updates += ", completed_at=?"
+        params.append(ts)
+    elif to_status == "blocked":
+        updates += ", blocked_reason=?"
+        params.append(message)
+    elif to_status == "queued":
+        updates += ", blocked_reason=NULL, claimed_at=NULL"
+    params.append(task_id)
+    await conn.execute(f"UPDATE tasks SET {updates} WHERE id=?", params)
+    await insert(conn, "task_events", {
+        "task_id": task_id, "from_status": task["status"],
+        "to_status": to_status, "actor": actor, "message": message,
+        "created_at": ts,
+    })
+    await conn.commit()
+    return True
+
+
+async def get_board(conn: aiosqlite.Connection) -> dict[str, list[dict]]:
+    """取得看板（按狀態分組）。"""
+    rows = await fetch_all(conn, "SELECT * FROM tasks ORDER BY priority DESC, created_at")
+    board: dict[str, list[dict]] = {
+        "backlog": [], "queued": [], "claimed": [],
+        "executing": [], "blocked": [], "completed": [], "failed": [],
+    }
+    for r in rows:
+        s = r.get("status", "backlog")
+        if s in board:
+            board[s].append(r)
+    return board
