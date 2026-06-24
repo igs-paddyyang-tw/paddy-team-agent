@@ -19,6 +19,7 @@ class EventType(str, Enum):
     TASK_COMPLETED = "task.completed"
     TASK_FAILED = "task.failed"
     TASK_BLOCKER = "task.blocker"
+    TASK_STATUS_CHANGED = "task.status_changed"
     # Cost
     COST_RECORDED = "cost.recorded"
     BUDGET_WARNING = "budget.warning"
