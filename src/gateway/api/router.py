@@ -53,3 +53,11 @@ app.include_router(board_router, prefix="/api", tags=["board"])
 @app.get("/api/health")
 def health():
     return {"status": "ok"}
+
+
+@app.get("/board")
+async def serve_board():
+    from fastapi.responses import FileResponse
+    from pathlib import Path
+    board_path = Path(__file__).resolve().parents[2] / "apps" / "web" / "board.html"
+    return FileResponse(board_path, media_type="text/html")

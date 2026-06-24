@@ -201,6 +201,21 @@ async def cmd_unblock(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text(f"❌ 無法 unblock：{r.json().get('detail', 'unknown')}")
 
 
+# ── /runtimes ──
+
+async def cmd_runtimes(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    data = await _get(context, "/api/runtimes")
+    if not data:
+        await update.message.reply_text("⚠️ 無可用 Runtime")
+        return
+    icons = {"available": "🟢", "busy": "🔵", "unavailable": "🔴"}
+    lines = ["🖥️ <b>Runtime 狀態</b>\n"]
+    for rt in data:
+        icon = icons.get(rt.get("status", ""), "⚪")
+        lines.append(f"{icon} {rt['provider']} ({rt['cli_command']}) — {rt['status']}")
+    await update.message.reply_text("\n".join(lines), parse_mode="HTML")
+
+
 # ── /logs ──
 
 async def cmd_logs(update: Update, context: ContextTypes.DEFAULT_TYPE):

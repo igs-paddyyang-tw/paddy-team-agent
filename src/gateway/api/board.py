@@ -67,3 +67,19 @@ async def api_retry(task_id: str, body: TransitionBody):
     if not ok:
         raise HTTPException(400, "無法 retry（狀態不是 failed 或任務不存在）")
     return {"task_id": task_id, "status": "queued"}
+
+
+# ── Runtime API（Phase 2）──
+
+_registry = None
+
+def set_registry(registry):
+    global _registry
+    _registry = registry
+
+@router.get("/runtimes")
+async def api_runtimes():
+    """列出所有 Runtime 狀態。"""
+    if _registry:
+        return _registry.get_all_status()
+    return []
