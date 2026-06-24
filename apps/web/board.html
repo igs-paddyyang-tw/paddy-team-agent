@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ark Agent Board</title>
+<style>
+:root{--bg:#0f172a;--card:#1e293b;--text:#e2e8f0;--muted:#64748b;--accent:#22d3ee;--border:#334155;--green:#22c55e;--yellow:#eab308;--red:#ef4444;--blue:#3b82f6}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+header{background:var(--card);border-bottom:1px solid var(--border);padding:1rem 2rem;display:flex;justify-content:space-between;align-items:center}
+header h1{font-size:1.3rem;color:var(--accent)}
+header .status{font-size:.85rem;color:var(--muted)}
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:1rem;padding:1.5rem;overflow-x:auto}
+.column{background:var(--card);border-radius:8px;border:1px solid var(--border);min-height:300px;display:flex;flex-direction:column}
+.column-header{padding:.75rem 1rem;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.column-header h2{font-size:.9rem;text-transform:uppercase;letter-spacing:.05em}
+.column-header .count{background:var(--border);color:var(--text);padding:.1rem .5rem;border-radius:10px;font-size:.75rem}
+.column-body{padding:.5rem;flex:1;overflow-y:auto}
+.task-card{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:.75rem;margin-bottom:.5rem;transition:border-color .2s}
+.task-card:hover{border-color:var(--accent)}
+.task-card .title{font-size:.85rem;font-weight:500;margin-bottom:.4rem}
+.task-card .meta{display:flex;justify-content:space-between;font-size:.75rem;color:var(--muted)}
+.task-card .assignee{color:var(--accent)}
+.task-card .priority-high{border-left:3px solid var(--yellow)}
+.task-card .priority-urgent{border-left:3px solid var(--red)}
+.task-card.blocked{border-left:3px solid var(--red)}
+.task-card .reason{font-size:.7rem;color:var(--red);margin-top:.3rem}
+.col-queued .column-header{border-top:3px solid var(--blue)}
+.col-claimed .column-header{border-top:3px solid var(--yellow)}
+.col-executing .column-header{border-top:3px solid var(--green)}
+.col-blocked .column-header{border-top:3px solid var(--red)}
+.col-completed .column-header{border-top:3px solid var(--muted)}
+.sidebar{position:fixed;right:0;top:0;width:260px;height:100vh;background:var(--card);border-left:1px solid var(--border);padding:1rem;overflow-y:auto}
+.sidebar h3{font-size:.9rem;color:var(--accent);margin-bottom:.75rem}
+.agent-card{padding:.5rem;border:1px solid var(--border);border-radius:6px;margin-bottom:.5rem}
+.agent-card .name{font-size:.8rem;font-weight:600}
+.agent-card .role{font-size:.7rem;color:var(--muted)}
+.agent-card .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:.4rem}
+.dot-idle{background:var(--green)}.dot-busy{background:var(--yellow)}.dot-offline{background:var(--red)}
+@media(max-width:768px){.board{grid-template-columns:1fr}.sidebar{display:none}}
+.board-container{margin-right:260px}
+@media(max-width:768px){.board-container{margin-right:0}}
+</style>
+</head>
+<body>
+<header>
+<h1>📋 Ark Agent Board</h1>
+<div class="status" id="last-update">Loading...</div>
+</header>
+<div class="board-container">
+<div class="board" id="board"></div>
+</div>
+<aside class="sidebar" id="sidebar">
+<h3>🤖 Agents</h3>
+<div id="agents-list">Loading...</div>
+</aside>
+<script>
+const API=location.origin;
+const COLS=['queued','claimed','executing','blocked','completed'];
+const COL_LABELS={queued:'Queued',claimed:'Claimed',executing:'Executing',blocked:'Blocked',completed:'Completed'};
+
+async function fetchBoard(){
+  try{
+    const r=await fetch(API+'/api/board');
+    return await r.json();
+  }catch(e){return null}
+}
+async function fetchAgents(){
+  try{
+    const r=await fetch(API+'/api/agents');
+    return await r.json();
+  }catch(e){return[]}
+}
+
+function renderBoard(data){
+  const el=document.getElementById('board');
+  el.innerHTML='';
+  COLS.forEach(col=>{
+    const tasks=data[col]||[];
+    const div=document.createElement('div');
+    div.className=`column col-${col}`;
+    div.innerHTML=`<div class="column-header"><h2>${COL_LABELS[col]}</h2><span class="count">${tasks.length}</span></div><div class="column-body">${tasks.slice(0,20).map(t=>taskCard(t,col)).join('')}</div>`;
+    el.appendChild(div);
+  });
+  document.getElementById('last-update').textContent=`Updated: ${new Date().toLocaleTimeString()}`;
+}
+
+function taskCard(t,col){
+  let cls='task-card';
+  if(t.priority>=2)cls+=' priority-urgent';
+  else if(t.priority>=1)cls+=' priority-high';
+  if(col==='blocked')cls+=' blocked';
+  let reason=col==='blocked'&&t.blocked_reason?`<div class="reason">⚠️ ${t.blocked_reason}</div>`:'';
+  return`<div class="${cls}"><div class="title">${t.title||'Untitled'}</div>${reason}<div class="meta"><span class="assignee">@${t.assignee||'unassigned'}</span><span>${relTime(t.updated_at||t.created_at)}</span></div></div>`;
+}
+
+function relTime(iso){
+  if(!iso)return'';
+  const d=new Date(iso),now=new Date(),diff=Math.floor((now-d)/1000);
+  if(diff<60)return'just now';
+  if(diff<3600)return Math.floor(diff/60)+'m ago';
+  if(diff<86400)return Math.floor(diff/3600)+'h ago';
+  return Math.floor(diff/86400)+'d ago';
+}
+
+function renderAgents(agents){
+  const el=document.getElementById('agents-list');
+  if(!agents.length){el.innerHTML='<div style="color:var(--muted)">No agents</div>';return}
+  el.innerHTML=agents.map(a=>{
+    const s=a.status||'idle';
+    return`<div class="agent-card"><div class="name"><span class="dot dot-${s}"></span>${a.name||a.id}</div><div class="role">${a.role||''}</div></div>`;
+  }).join('');
+}
+
+async function refresh(){
+  const[board,agents]=await Promise.all([fetchBoard(),fetchAgents()]);
+  if(board)renderBoard(board);
+  renderAgents(agents||[]);
+}
+
+refresh();
+setInterval(refresh,10000);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)refresh()});
+</script>
+</body>
+</html>
