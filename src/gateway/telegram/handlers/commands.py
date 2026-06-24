@@ -90,8 +90,20 @@ async def cmd_agents(update: Update, context: ContextTypes.DEFAULT_TYPE):
 # ── /board ──
 
 async def cmd_board(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    issues = await _get(context, "/api/issues")
-    text = fmt_board(issues)
+    board = await _get(context, "/api/board")
+    sections = []
+    icons = {"queued": "🔵", "claimed": "🟡", "executing": "🟢", "blocked": "🔴", "failed": "❌"}
+    for status, icon in icons.items():
+        tasks = board.get(status, [])
+        if tasks:
+            lines = [f"{icon} <b>{status.upper()}</b> ({len(tasks)})"]
+            for t in tasks[:5]:
+                assignee = t.get("assignee") or "unassigned"
+                lines.append(f"  • [{t['id'][:10]}] {t['title'][:30]} → @{assignee}")
+            sections.append("\n".join(lines))
+    completed_today = len(board.get("completed", []))
+    sections.append(f"✅ COMPLETED today: {completed_today}")
+    text = "📋 <b>任務看板</b>\n\n" + "\n\n".join(sections) if sections else "📋 看板為空"
     kb = InlineKeyboardMarkup([[
         InlineKeyboardButton("➕ 新任務", callback_data="new_issue"),
         InlineKeyboardButton("🔄 重新整理", callback_data="refresh_board"),
@@ -162,13 +174,31 @@ async def cmd_stop(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def cmd_retry(update: Update, context: ContextTypes.DEFAULT_TYPE):
     arg = update.message.text.replace("/retry", "").strip()
     if not arg:
-        await update.message.reply_text("用法：/retry issue_id")
+        await update.message.reply_text("用法：/retry task_id")
         return
-    # Reset issue status
     async with httpx.AsyncClient(timeout=10) as c:
-        await c.patch(f"{_api(context)}/api/issues/{arg}/assign",
-                      json={"assignee": ""})
-    await update.message.reply_text(f"🔄 已重新排入佇列：#{arg}")
+        r = await c.patch(f"{_api(context)}/api/tasks/{arg}/retry",
+                          json={"actor": str(update.effective_user.id)})
+        if r.status_code == 200:
+            await update.message.reply_text(f"🔄 任務 {arg} 已重新排入佇列")
+        else:
+            await update.message.reply_text(f"❌ 無法重試：{r.json().get('detail', 'unknown')}")
+
+
+# ── /unblock ──
+
+async def cmd_unblock(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    arg = update.message.text.replace("/unblock", "").strip()
+    if not arg:
+        await update.message.reply_text("用法：/unblock task_id")
+        return
+    async with httpx.AsyncClient(timeout=10) as c:
+        r = await c.patch(f"{_api(context)}/api/tasks/{arg}/unblock",
+                          json={"actor": str(update.effective_user.id)})
+        if r.status_code == 200:
+            await update.message.reply_text(f"✅ 任務 {arg} 已解除阻礙，重新排入佇列")
+        else:
+            await update.message.reply_text(f"❌ 無法 unblock：{r.json().get('detail', 'unknown')}")
 
 
 # ── /logs ──
