@@ -1,6 +1,6 @@
 # AI Team Agent
 
-> 5 人 AI Agent 團隊管理平台 — 四層架構（Gateway + Coordinator + Runtime + Business）
+> 5 人 AI Agent 團隊管理平台 — 五層架構 + Multica 級任務管理 + 多 Runtime
 
 ## 快速開始
 
@@ -13,13 +13,24 @@ cp .env.example .env   # 填入 TELEGRAM_BOT_TOKEN + GEMINI_API_KEY
 python start.py        # 一鍵啟動全平台
 ```
 
-## 四層架構
+## 核心功能
+
+| 功能 | 說明 |
+|------|------|
+| 任務生命週期 | 7 狀態機（BACKLOG→QUEUED→CLAIMED→EXECUTING→BLOCKED/FAILED→COMPLETED） |
+| 多 Runtime | auto-detect kiro-cli / claude-code / codex / multica，自動 fallback |
+| Kanban Web UI | `http://localhost:33333/board`（暗黑科技風格、10s 自動刷新） |
+| Autopilot | cron 排程自動建立任務 + 指定 assignee |
+| Telegram 指揮 | /board /assign /unblock /retry /runtimes /costs |
+
+## 五層架構
 
 ```
-入口層（Gateway）     → API + Telegram + Gemini Chat
-協調層（Coordinator） → A2A Router + EventBus + DB + Services
-執行層（Runtime）     → kiro-cli spawn × 5 agents
-業務層（Business）    → News + Web Search + 自訂 Skills
+L1 Entry        → API + Telegram + Web Board
+L2 OS           → TaskLifecycle + Autopilot + EventBus
+L3 Collaboration→ A2A Router + TaskGraph + Agent Discovery
+L4 Execution    → RuntimeRegistry + ProviderAdapter (4 providers)
+L5 Knowledge    → Wiki + Memory + Skill Evolution
 ```
 
 ```
