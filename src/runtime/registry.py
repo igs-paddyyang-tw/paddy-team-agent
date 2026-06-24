@@ -109,11 +109,20 @@ class CodexAdapter(ProviderAdapter):
 
 # ── Provider 註冊表 ──
 
-ALL_PROVIDERS: dict[str, type[ProviderAdapter]] = {
-    "kiro-cli": KiroCliAdapter,
-    "claude-code": ClaudeCodeAdapter,
-    "codex": CodexAdapter,
-}
+def _load_providers() -> dict[str, type[ProviderAdapter]]:
+    providers: dict[str, type[ProviderAdapter]] = {
+        "kiro-cli": KiroCliAdapter,
+        "claude-code": ClaudeCodeAdapter,
+        "codex": CodexAdapter,
+    }
+    try:
+        from runtime.multica_provider import MulticaProvider
+        providers["multica"] = MulticaProvider
+    except Exception:
+        pass
+    return providers
+
+ALL_PROVIDERS: dict[str, type[ProviderAdapter]] = _load_providers()
 
 
 class RuntimeRegistry:
