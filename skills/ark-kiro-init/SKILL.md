@@ -11,7 +11,7 @@ description: |
   或任何需要產出 .kiro 目錄結構的場景。
 metadata:
   author: paddyyang
-  version: "2.0"
+  version: "2.1"
   updated: 2026-06-25
 ---
 
