@@ -9,8 +9,8 @@ description: |
   AI 團隊協作、ark-agent-team、或任何需要從零建立多 Agent 協作平台的場景。
 metadata:
   author: paddyyang
-  version: "2.0"
-  updated: 2026-06-24
+  version: "2.1"
+  updated: 2026-06-25
 ---
 
 # ark-agent-team-init
