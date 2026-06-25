@@ -711,10 +711,10 @@ def _ensure_knowledge(knowledge_dir: Path, agent_name: str) -> None:
         schema.write_text(
             f"---\ntitle: \"{agent_name} Knowledge Schema\"\n"
             f"type: system\ncreated: {TODAY}\nupdated: {TODAY}\n---\n\n"
-            "# Wiki Schema v3.0\n\n"
+            "# Wiki Schema v3.1\n\n"
             "## 目錄結構\n\n```\nknowledge/\n"
-            "├── raw/          → 唯讀原始資料\n"
-            "├── wiki/         → 結構化知識頁面\n"
+            "├── raw/          → 所有輸入先進這裡\n"
+            "├── wiki/         → 由 LLM ingest 產出（不可手動寫入）\n"
             "├── schema.md     → 本文件\n"
             "├── index.md      → 索引目錄\n"
             "└── log.md        → 操作日誌（append-only）\n```\n\n"
@@ -725,7 +725,7 @@ def _ensure_knowledge(knowledge_dir: Path, agent_name: str) -> None:
             "updated: YYYY-MM-DD\nstatus: seedling | developing | mature\n---\n```\n\n"
             "## 操作規則\n\n"
             "| 規則 | 說明 |\n|------|------|\n"
-            "| raw/ 唯讀 | LLM 只讀不改 |\n"
+            "| 所有輸入先進 raw/ | Agent、人類、排程都寫 raw |\n"
             "| 修改後同步 | 改 wiki → 必須更新 index.md + log.md |\n"
             "| log append-only | 禁止刪除舊記錄 |\n",
             encoding="utf-8",
