@@ -39,7 +39,7 @@
 | Agent 完成任務學到東西 | **自己的** `knowledge/wiki/` | 私有，不影響他人 |
 | Agent 解決了通用問題 | **自己的** `knowledge/wiki/` | 先存私有 |
 | 排程整理（daily） | 根目錄 `knowledge/raw/` | LLM 分析私有知識 → 提取通用部分 → 放入 shared/raw |
-| IDE 手動寫入 | 根目錄 `knowledge/wiki/` | 人類手動維護 |
+| IDE 手動寫入 | 根目錄 `knowledge/raw/` | 人類放入 raw → LLM ingest → wiki |
 
 ## 共用知識同步機制
 
