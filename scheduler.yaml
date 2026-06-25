@@ -4,14 +4,25 @@ jobs:
   # ── 狀態回報 → 管理者私訊 ──────────────────────────────────
   - id: hourly-check
     target: admin-agent
-    prompt: "⏰ 請用 query_team_status() 查詢團隊狀態，回報在線數量。"
+    prompt: |
+      ⏰ 確認團隊狀態並回報。
+      規則：
+      - 無事可報 → 用一句友善的話帶過（≤ 30 字），不要輸出日誌
+      - 有進度 → emoji + 一行摘要
+      - 跟前次相同 → 不回報（靜默，不發 reply）
+      - 禁止輸出 raw JSON、檔案內容、memory.md 原始文字
     cron: "0 9-21 * * *"
     reply_to: private
 
   # ── 每日摘要 ───────────────────────────────────────────────
   - id: daily-summary
     target: pm-agent
-    prompt: "📋 今日摘要：整理成果 + 明日計劃，reply 回報。"
+    prompt: |
+      📋 今日摘要。
+      規則：
+      - 有成果 → emoji + 完成項目 + 明日計劃
+      - 無成果 → 一句友善話（如「今天休息日，明天繼續 💪」）
+      - ≤ 100 字，不要輸出 raw 資料
     cron: "0 21 * * *"
     reply_to: private
 
