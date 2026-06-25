@@ -45,3 +45,27 @@ jobs:
       「📚 每日知識沉澱時間！請整理今日學到的知識，寫入 knowledge/wiki/。」
     cron: "30 21 * * *"
     reply_to: private
+
+  # ── 知識庫自動 ingest（每日 22:00）─────────────────────────
+  - id: wiki-ingest
+    target: admin-agent
+    prompt: |
+      📚 執行知識庫 ingest：
+      1. 掃描所有 agents/*/knowledge/raw/ 新增檔案
+      2. LLM 分析通用性 → 提取到根目錄 knowledge/raw/
+      3. 對根目錄 knowledge/raw/ 執行 ingest → 產出 wiki/
+      4. 回報：新增幾篇、更新幾篇
+    cron: "0 22 * * *"
+    reply_to: private
+
+  # ── 科技日報自動產出（每日 08:30）────────────────────────────
+  - id: daily-news
+    target: ai-dev-agent
+    prompt: |
+      📰 產出今日科技日報：
+      1. 抓取 Hacker News + TechCrunch 頭條
+      2. 分類（AI / 程式語言 / 綜合科技）
+      3. 產出 HTML 日報 → output/news/
+      4. 推送摘要到 Telegram
+    cron: "30 8 * * 1-5"
+    reply_to: private
