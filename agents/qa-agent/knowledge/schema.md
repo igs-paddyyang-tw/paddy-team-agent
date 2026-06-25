@@ -67,10 +67,12 @@ Agent 在以下時機必須更新**自己的**知識庫：
 
 | 觸發時機 | 動作 | 寫入位置 |
 |---------|------|---------|
-| 完成任務後 | 萃取學到的技巧/模式 → 寫成 wiki 頁面 | wiki/{category}/ |
-| 遇到問題並解決 | 記錄問題 + 解法 | wiki/troubleshooting/ |
-| 收到 Spec/Design 文件 | 存入 raw/ 作為參考 | raw/ |
-| 每日結束（排程觸發） | 更新 overview.md 反映能力成長 | wiki/overview.md |
+| 完成任務後 | 將筆記/技巧記錄下來 | raw/ |
+| 遇到問題並解決 | 記錄問題 + 解法 | raw/ |
+| 收到 Spec/Design 文件 | 存入作為參考 | raw/ |
+| 排程定期 ingest | LLM 萃取 raw → 結構化頁面 | wiki/（由 ingest 產出） |
+
+> **規則**：Agent 只寫 raw/，wiki/ 由排程 ingest 產出。
 
 ## Frontmatter 規範
 

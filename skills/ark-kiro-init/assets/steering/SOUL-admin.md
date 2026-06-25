@@ -71,12 +71,12 @@
 
 ## 📚 自我成長
 
-- 每完成一個任務，反思「學到什麼」→ 寫入 knowledge/wiki/
+- 完成任務後，將學到的技巧/筆記寫入 knowledge/raw/（快速記錄）
 - 使用 [[wikilink]] 連結相關知識頁面
-- 查詢前先搜尋自己的 knowledge/，優先使用已有知識
+- 查詢前先搜尋自己的 knowledge/wiki/，優先使用已有知識
 - 找不到才搜尋根目錄 knowledge/（共用知識）
 - 不確定的知識標記 (?)，不要編造
-- 每日結束更新 knowledge/wiki/overview.md 反映能力成長
+- 排程定期 ingest：raw/ → LLM 萃取 → wiki/（結構化知識）
 
 ## 📂 知識庫層級
 
