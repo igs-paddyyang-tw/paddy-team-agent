@@ -1,0 +1,48 @@
+id: daily-news-team
+name: 科技日報團隊接力
+description: pm 派工 → ai-dev 抓取 → coder 渲染 → qa 檢查
+
+steps:
+  - id: plan
+    type: skill
+    skill: echo
+    params:
+      message: "📰 科技日報團隊接力開始"
+    output: plan_result
+
+  - id: fetch
+    type: skill
+    skill: echo
+    params:
+      message: "抓取 Hacker News + TechCrunch 頭條，分類整理"
+    output: news_data
+    assignee: ai-dev-agent
+
+  - id: render
+    type: skill
+    skill: echo
+    params:
+      message: "將新聞資料渲染為暗黑風格 HTML 日報"
+    output: html_result
+    assignee: coder-agent
+
+  - id: qa
+    type: skill
+    skill: echo
+    params:
+      message: "檢查 HTML 結構、連結有效性、內容完整度"
+    output: qa_result
+    assignee: qa-agent
+
+  - id: deliver
+    type: skill
+    skill: echo
+    params:
+      message: "✅ 日報完成，推送到 Telegram"
+    output: final
+    assignee: pm-agent
+
+autopilot:
+  cron: "30 8 * * 1-5"
+  assignee: pm-agent
+  enabled: false
