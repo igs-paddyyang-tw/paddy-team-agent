@@ -245,6 +245,44 @@ async def intervene_session(session_id: str, body: dict, request: Request):
     return {"status": "ok", "action": action, "session_id": session_id}
 
 
+@router.get("/sessions/{session_id}/turns")
+async def session_turns(session_id: str, limit: int = 100):
+    """取得 session 對話記錄（逐輪）。"""
+    conn = await get_async_db()
+    try:
+        return await fetch_all(conn,
+            "SELECT * FROM session_turns WHERE session_id=? ORDER BY idx LIMIT ?",
+            (session_id, limit))
+    finally:
+        await conn.close()
+
+
+@router.post("/sessions/{session_id}/abort")
+async def abort_session(session_id: str, request: Request):
+    """中止運行中的 session。"""
+    bus = request.app.state.bus
+    from coordinator.events.types import Event, EventType
+    await bus.emit(Event(
+        type=EventType.AGENT_STOPPED,
+        data={"session_id": session_id, "action": "abort"},
+        source="admin",
+    ))
+    return {"status": "aborted", "session_id": session_id}
+
+
+@router.post("/sessions/{session_id}/restart")
+async def restart_session(session_id: str, request: Request):
+    """重啟失敗的 session。"""
+    bus = request.app.state.bus
+    from coordinator.events.types import Event, EventType
+    await bus.emit(Event(
+        type=EventType.SYSTEM_RESTART,
+        data={"session_id": session_id, "action": "restart"},
+        source="admin",
+    ))
+    return {"status": "restarting", "session_id": session_id}
+
+
 # ── Dashboard Live (redirect to WS) ──────────────────────────
 
 @router.get("/dashboard/live")

@@ -1,6 +1,0 @@
-agent_id: ai-dev-agent
-role: worker
-skills: [AI架構, prompt工程, agent設計, LLM整合, 系統設計]
-capacity: 3
-current_load: 0
-description: AI 架構設計與 Agent 系統開發

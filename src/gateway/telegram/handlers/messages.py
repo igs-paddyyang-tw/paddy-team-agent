@@ -228,7 +228,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not target:
             done.set()
             timer_task.cancel()
-            await _set_reaction(msg, "❌")
+            await _set_reaction(msg, "👎")
             await msg.reply_text("⚠️ 無可用 Agent")
             return
 
@@ -237,7 +237,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if not agent_proc:
             done.set()
             timer_task.cancel()
-            await _set_reaction(msg, "❌")
+            await _set_reaction(msg, "👎")
             await msg.reply_text("⚠️ Agent 不可用")
             return
 
@@ -260,7 +260,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             if not result:
                 result = "✅ 處理完成（無文字輸出）"
 
-            await _set_reaction(msg, "✅")
+            await _set_reaction(msg, "👍")
             log.info("Reply to user: %s", result[:100])
             # 限制長度，避免 TG 洗版
             if len(result) > 3000:
@@ -268,12 +268,12 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
             for i in range(0, len(result), 4000):
                 await msg.reply_text(result[i:i+4000])
         else:
-            await _set_reaction(msg, "❌")
+            await _set_reaction(msg, "👎")
             await msg.reply_text("⚠️ Agent 處理超時或失敗")
 
     except Exception as e:
         done.set()
         timer_task.cancel()
-        await _set_reaction(msg, "❌")
+        await _set_reaction(msg, "👎")
         log.error("handle_message error: %s", e)
         await msg.reply_text(f"⚠️ 處理失敗：{type(e).__name__}")

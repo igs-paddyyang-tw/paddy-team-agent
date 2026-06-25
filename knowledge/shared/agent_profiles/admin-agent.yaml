@@ -1,6 +1,0 @@
-agent_id: admin-agent
-role: admin
-skills: [服務監控, 部署, Docker, 成本控制, 系統管理]
-capacity: 3
-current_load: 0
-description: 服務監控與部署管理，負責成本控制

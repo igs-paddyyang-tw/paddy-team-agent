@@ -1,6 +1,0 @@
-agent_id: coder-agent
-role: worker
-skills: [全端開發, API實作, Python, FastAPI, 資料庫, 前端]
-capacity: 3
-current_load: 0
-description: 全端開發與 API 實作

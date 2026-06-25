@@ -8,12 +8,9 @@
 
 ```
 專案根目錄/
-├── knowledge/                    ← 團隊共用知識庫（IDE 開發時寫入）
-│   ├── shared/                   ← 排程整理後的共用知識（LLM 分析彙整）
-│   │   ├── raw/                  ← Agent 產出 → LLM 分析 → 放入此處
-│   │   └── wiki/                 ← 共用精煉知識
-│   ├── raw/
-│   ├── wiki/
+├── knowledge/                    ← 共用知識庫（排程彙整 + IDE 手動維護）
+│   ├── raw/                      ← 排程 LLM 分析 Agent 知識後放入
+│   ├── wiki/                     ← 共用精煉知識
 │   ├── schema.md
 │   ├── index.md
 │   └── log.md
@@ -32,8 +29,8 @@
 | 優先 | 來源 | 何時搜尋 |
 |------|------|---------|
 | 1️⃣ | 自己的 `knowledge/wiki/` | **預設**（所有查詢先搜自己） |
-| 2️⃣ | 根目錄 `knowledge/shared/wiki/` | 自己的找不到 or 明確指定「共用知識」 |
-| 3️⃣ | 根目錄 `knowledge/wiki/` | 明確指定「團隊知識」 |
+| 2️⃣ | 根目錄 `knowledge/wiki/` | 自己的找不到 or 明確指定「共用知識」 |
+
 
 ## 寫入規則
 
@@ -41,8 +38,8 @@
 |------|---------|------|
 | Agent 完成任務學到東西 | **自己的** `knowledge/wiki/` | 私有，不影響他人 |
 | Agent 解決了通用問題 | **自己的** `knowledge/wiki/` | 先存私有 |
-| 排程整理（daily） | 根目錄 `knowledge/shared/raw/` | LLM 分析私有知識 → 提取通用部分 → 放入 shared/raw |
-| IDE 手動寫入 | 根目錄 `knowledge/wiki/` | 人類手動維護的團隊知識 |
+| 排程整理（daily） | 根目錄 `knowledge/raw/` | LLM 分析私有知識 → 提取通用部分 → 放入 shared/raw |
+| IDE 手動寫入 | 根目錄 `knowledge/wiki/` | 人類手動維護 |
 
 ## 共用知識同步機制
 
@@ -95,7 +92,7 @@ status: seedling | developing | mature
 
 ## 禁止事項
 
-- ❌ 不可直接寫入根目錄 `knowledge/`（由排程/人類管理）
+- ❌ 不可直接寫入根目錄 `knowledge/`（由排程 LLM + 人類管理）
 - ❌ 不可刪除 log.md 舊記錄
 - ❌ 不可修改 raw/ 中的檔案
 - ❌ 不可在私有知識中存放敏感 Token/密碼
