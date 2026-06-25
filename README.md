@@ -1,6 +1,16 @@
-# AI Team Agent
+# AI Team Agent `v1.0.0`
 
 > 5 人 AI Agent 團隊管理平台 — 五層架構 + Multica 級任務管理 + 多 Runtime
+>
+> 使用 [`ark-agent-team-builder`](skills/ark-agent-team-builder/) `v2.0` 產出
+
+## 版本對應
+
+| ai-team-agent | ark-agent-team-builder | 功能 |
+|---------------|----------------------|------|
+| v1.0.0 | v2.0 | Phase 1-4 完成（任務生命週期 + 多 Runtime + Kanban + Multica） |
+
+> **版號規則**：`ark-agent-team-builder` 採 `v2.X` 遞增。每次 generator 新增功能時 X+1，ai-team-agent 同步更新對應版本。
 
 ## 快速開始
 
