@@ -2,7 +2,7 @@
 
 > 5 人 AI Agent 團隊管理平台 — 五層架構 + Multica 級任務管理 + 多 Runtime
 >
-> 使用 [`ark-agent-team-builder`](skills/ark-agent-team-builder/) `v2.0` 產出
+> 使用 [`ark-agent-team-builder`](skills/ark-agent-team-builder/) `v2.1` 產出
 
 ## 版本對應
 
@@ -32,6 +32,16 @@ python start.py        # 一鍵啟動全平台
 | Kanban Web UI | `http://localhost:33333/board`（暗黑科技風格、10s 自動刷新） |
 | Autopilot | cron 排程自動建立任務 + 指定 assignee |
 | Telegram 指揮 | /board /assign /unblock /retry /runtimes /costs |
+
+## 自動化工具
+
+| 工具 | 路徑 | 功能 |
+|------|------|------|
+| 取得 Chat ID | `scripts/get_chat_id.py` | 自動偵測 Telegram 使用者 ID |
+| 開機自啟 | `scripts/ai-team-agent.service` | systemd unit（Linux） |
+| 團隊日報 | `workflows/daily-news-team.yaml` | 4 Agent 接力 Workflow |
+| 知識庫監聽 | `src/coordinator/services/wiki_watcher.py` | raw/ 新增自動 ingest |
+| 排程 | `scheduler.yaml` | wiki-ingest 22:00 + daily-news 08:30 |
 
 ## 五層架構
 
