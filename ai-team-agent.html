@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Team Agent — 系統架構</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+:root { --bg: #0d1117; --fg: #e6edf3; --accent: #58a6ff; --card: #161b22; --border: #30363d; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--fg); line-height: 1.7; padding: 2rem; max-width: 960px; margin: 0 auto; }
+h1 { color: var(--accent); border-bottom: 2px solid var(--border); padding-bottom: 0.5rem; margin: 2rem 0 1rem; font-size: 2rem; }
+h2 { color: var(--accent); margin: 2rem 0 0.8rem; font-size: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.3rem; }
+h3 { color: #79c0ff; margin: 1.5rem 0 0.5rem; font-size: 1.2rem; }
+h4 { color: #a5d6ff; margin: 1rem 0 0.4rem; }
+p { margin: 0.6rem 0; }
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { background: var(--card); padding: 0.15rem 0.4rem; border-radius: 4px; font-size: 0.9em; color: #f0883e; }
+pre { background: var(--card); border: 1px solid var(--border); border-radius: 8px; padding: 1rem; overflow-x: auto; margin: 1rem 0; }
+pre code { background: none; padding: 0; color: var(--fg); }
+table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+th, td { border: 1px solid var(--border); padding: 0.5rem 0.8rem; text-align: left; }
+th { background: var(--card); color: var(--accent); }
+tr:nth-child(even) { background: rgba(22, 27, 34, 0.5); }
+blockquote { border-left: 3px solid var(--accent); padding-left: 1rem; color: #8b949e; margin: 1rem 0; }
+ul, ol { padding-left: 1.5rem; margin: 0.5rem 0; }
+li { margin: 0.3rem 0; }
+hr { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+.mermaid { background: var(--card); border-radius: 8px; padding: 1rem; margin: 1rem 0; text-align: center; }
+</style>
+</head>
+<body>
+<h1 id="ai-team-agent">AI Team Agent — 系統架構文件</h1>
+<blockquote>
+<p>最後更新：2026-06-24</p>
+</blockquote>
+<h2 id="1">1. 系統總覽</h2>
+<p>AI Team Agent 是一個多 Agent 協作平台，透過 Telegram Bot 接收使用者指令，由 PM Agent 拆解需求並分派給專業 Agent 執行，最終回報結果。平台採用事件驅動架構，所有 Agent 間通訊透過 A2A Router 協調。</p>
+<pre class="highlight"><code class="language-mermaid">graph LR
+    User[👤 使用者] --&gt;|Telegram| TG[TG Bot]
+    TG --&gt; Router[A2A Router]
+    Router --&gt; PM[🧠 PM Agent]
+    Router --&gt; Dev[🤖 AI Dev]
+    Router --&gt; Coder[💻 Coder]
+    Router --&gt; QA[🧪 QA]
+    Router --&gt; Admin[👑 Admin]
+    PM --&gt;|delegate| Dev
+    PM --&gt;|delegate| Coder
+    PM --&gt;|delegate| QA
+    API[REST API :33333] --&gt; Router
+    Web[Web Dashboard] --&gt; API
+</code></pre>
+
+<h2 id="2">2. 技術棧</h2>
+<table>
+<thead>
+<tr>
+<th>層級</th>
+<th>技術</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>語言</td>
+<td>Python 3.12</td>
+</tr>
+<tr>
+<td>Web 框架</td>
+<td>FastAPI + Uvicorn</td>
+</tr>
+<tr>
+<td>Agent 引擎</td>
+<td>kiro-cli</td>
+</tr>
+<tr>
+<td>資料庫</td>
+<td>SQLite（aiosqlite）</td>
+</tr>
+<tr>
+<td>事件系統</td>
+<td>自建 EventBus（pub/sub）</td>
+</tr>
+<tr>
+<td>Telegram</td>
+<td>python-telegram-bot</td>
+</tr>
+<tr>
+<td>LLM</td>
+<td>Gemini（via gateway）</td>
+</tr>
+<tr>
+<td>前端 Dashboard</td>
+<td>Next.js + Tailwind</td>
+</tr>
+<tr>
+<td>部署</td>
+<td>Docker Compose</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3">3. 目錄結構</h2>
+<pre class="highlight"><code>ai-team-agent/
+├── start.py                 # 入口
+├── team.yaml                # 團隊配置
+├── scheduler.yaml           # 排程定義
+├── src/                     # 核心程式碼
+│   ├── bootstrap.py         # 啟動編排
+│   ├── runtime/             # 進程管理、排程、config
+│   ├── coordinator/         # DB、EventBus、A2A、Services
+│   ├── gateway/             # REST API + Telegram Bot
+│   └── business/            # 業務邏輯
+├── agents/                  # 5 個 Agent 工作空間
+├── skills/                  # 55 個 Skills
+├── knowledge/               # Wiki 知識庫
+├── apps/web/                # Next.js Dashboard
+├── docs/                    # 規格/設計文件
+├── tasks/                   # 任務板
+├── tests/                   # pytest
+├── data/                    # SQLite DBs
+├── config/                  # 設定檔
+└── secrets/                 # 敏感資料
+</code></pre>
+
+<h2 id="4">4. 核心模組</h2>
+<h3 id="41-runtimesrcruntime">4.1 Runtime（<code>src/runtime/</code>）</h3>
+<table>
+<thead>
+<tr>
+<th>檔案</th>
+<th>職責</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>process.py</code></td>
+<td>Agent 進程生命週期管理（啟動/停止/重啟）</td>
+</tr>
+<tr>
+<td><code>daemon.py</code></td>
+<td>背景服務守護</td>
+</tr>
+<tr>
+<td><code>scheduler.py</code></td>
+<td>定時任務排程（依 scheduler.yaml）</td>
+</tr>
+<tr>
+<td><code>config.py</code></td>
+<td>team.yaml 解析為 Python 物件</td>
+</tr>
+<tr>
+<td><code>mcp_registry.py</code></td>
+<td>MCP 工具註冊與查詢</td>
+</tr>
+</tbody>
+</table>
+<h3 id="42-coordinatorsrccoordinator">4.2 Coordinator（<code>src/coordinator/</code>）</h3>
+<h4 id="dbdb">DB（<code>db/</code>）</h4>
+<ul>
+<li><code>models.py</code> — SQLite async CRUD（init_db / fetch / insert）</li>
+<li><code>migrations/001_init.sql</code> — Schema 定義</li>
+</ul>
+<h4 id="eventsevents">Events（<code>events/</code>）</h4>
+<ul>
+<li><code>bus.py</code> — EventBus 實現（subscribe / publish / async handlers）</li>
+<li><code>types.py</code> — EventType 枚舉 + Event dataclass</li>
+</ul>
+<h4 id="a2aa2a">A2A（<code>a2a/</code>）</h4>
+<ul>
+<li><code>router.py</code> — Agent 間訊息路由</li>
+<li><code>graph.py</code> — 任務依賴圖（DAG）</li>
+<li><code>shared_memory.py</code> — 跨 Agent 共享記憶體</li>
+<li><code>feedback_loop.py</code> — 任務結果回饋迴圈</li>
+<li><code>progress_parser.py</code> — Output Marker 解析（[DONE]/[PROGRESS]/[FAIL]）</li>
+<li><code>discovery.py</code> — Agent 能力發現</li>
+<li><code>protocol.py</code> — A2A 通訊協定定義</li>
+</ul>
+<h4 id="servicesservices">Services（<code>services/</code>）</h4>
+<ul>
+<li><code>cost_tracker.py</code> — Token 使用量 + 費用追蹤（日限 $30）</li>
+<li><code>health_monitor.py</code> — Agent 健康檢查</li>
+<li><code>audit_logger.py</code> — 全事件稽核日誌</li>
+</ul>
+<h3 id="43-gatewaysrcgateway">4.3 Gateway（<code>src/gateway/</code>）</h3>
+<h4 id="rest-apiapi">REST API（<code>api/</code>）</h4>
+<table>
+<thead>
+<tr>
+<th>端點</th>
+<th>檔案</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/api/agents</code></td>
+<td><code>agents.py</code></td>
+<td>Agent CRUD + 狀態查詢</td>
+</tr>
+<tr>
+<td><code>/api/issues</code></td>
+<td><code>issues.py</code></td>
+<td>任務管理（建立/指派/更新）</td>
+</tr>
+<tr>
+<td><code>/api/costs</code></td>
+<td><code>costs.py</code></td>
+<td>成本查詢</td>
+</tr>
+<tr>
+<td><code>/api/schedules</code></td>
+<td><code>schedules.py</code></td>
+<td>排程管理</td>
+</tr>
+<tr>
+<td><code>/api/admin/*</code></td>
+<td><code>admin.py</code></td>
+<td>管理操作（重啟/設定）</td>
+</tr>
+<tr>
+<td><code>/ws</code></td>
+<td><code>ws.py</code></td>
+<td>WebSocket 即時推送</td>
+</tr>
+</tbody>
+</table>
+<h4 id="telegramtelegram">Telegram（<code>telegram/</code>）</h4>
+<ul>
+<li><code>bot.py</code> — Bot 初始化 + polling</li>
+<li><code>handlers/commands.py</code> — /start /status /help 等指令</li>
+<li><code>handlers/messages.py</code> — 一般訊息處理 + Agent 路由</li>
+<li><code>handlers/callbacks.py</code> — Inline button 回調</li>
+<li><code>notifications.py</code> — 主動通知推送</li>
+<li><code>formatters.py</code> — 訊息格式化（Markdown/HTML）</li>
+<li><code>progress.py</code> — 任務進度即時更新</li>
+<li><code>topics.py</code> — Group Topics 管理</li>
+</ul>
+<h3 id="44-businesssrcbusiness">4.4 Business（<code>src/business/</code>）</h3>
+<table>
+<thead>
+<tr>
+<th>檔案</th>
+<th>職責</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>web_search.py</code></td>
+<td>網路搜尋整合</td>
+</tr>
+<tr>
+<td><code>news_scraper.py</code></td>
+<td>新聞來源爬取</td>
+</tr>
+<tr>
+<td><code>news_renderer.py</code></td>
+<td>新聞格式化輸出</td>
+</tr>
+</tbody>
+</table>
+<h2 id="5-agent">5. Agent 團隊</h2>
+<table>
+<thead>
+<tr>
+<th>Agent</th>
+<th>角色</th>
+<th>職責</th>
+<th>工作目錄</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>admin-agent</td>
+<td>👑 Admin</td>
+<td>服務管理、開發維護、團隊指揮</td>
+<td><code>agents/admin-agent/</code></td>
+</tr>
+<tr>
+<td>pm-agent</td>
+<td>🧠 Leader</td>
+<td>需求分析、派工、驗收</td>
+<td><code>agents/pm-agent/</code></td>
+</tr>
+<tr>
+<td>ai-dev-agent</td>
+<td>🤖 Worker</td>
+<td>AI/ML 架構、Prompt 工程</td>
+<td><code>agents/ai-dev-agent/</code></td>
+</tr>
+<tr>
+<td>coder-agent</td>
+<td>💻 Worker</td>
+<td>全端開發、API 實作</td>
+<td><code>agents/coder-agent/</code></td>
+</tr>
+<tr>
+<td>qa-agent</td>
+<td>🧪 Worker</td>
+<td>測試、品質保證</td>
+<td><code>agents/qa-agent/</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>指揮鏈</strong>：<code>使用者 → admin → leader → worker</code></p>
+<p>每個 Agent 工作空間含：
+- <code>.kiro/steering/</code> — 行為準則（SOUL / MEMORY / TEAM）
+- <code>.kiro/skills/</code> — 可用 Skills
+- <code>knowledge/</code> — 個人知識庫
+- <code>data/</code> / <code>docs/</code> / <code>output/</code></p>
+<h2 id="6-skills">6. Skills 概覽</h2>
+<p>共 55 個 Skill，以 <code>ark-</code> 為前綴，分類如下：</p>
+<table>
+<thead>
+<tr>
+<th>類別</th>
+<th>Skills</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文件產出</td>
+<td>superpowers, doc-coauthoring, report-template, uml-generator</td>
+</tr>
+<tr>
+<td>開發工具</td>
+<td>code-review, test-runner, mcp-builder, env-doctor, docker-deploy</td>
+</tr>
+<tr>
+<td>AI/Bot</td>
+<td>ai-bot-builder, chatbot-generator, llm-cli, llm-tools</td>
+</tr>
+<tr>
+<td>資料分析</td>
+<td>data-dashboard, kpi-calculator, retention-analysis, db-query, etl-pipeline</td>
+</tr>
+<tr>
+<td>設計</td>
+<td>ui-design-system, frontend-design, canvas-design, theme-factory</td>
+</tr>
+<tr>
+<td>檔案工具</td>
+<td>pdf-tool, docx-tool, xlsx-tool, pptx-tool, file-export</td>
+</tr>
+<tr>
+<td>Web</td>
+<td>webapp-generator, web-scraper, browser-tool, landing-page, html-dashboard</td>
+</tr>
+<tr>
+<td>專案管理</td>
+<td>project-planning, planning-with-files, skill-creator, agent-team-builder</td>
+</tr>
+<tr>
+<td>驗證</td>
+<td>code-spec-validator, ux-spec-validator, security-audit</td>
+</tr>
+<tr>
+<td>知識管理</td>
+<td>wiki-engine</td>
+</tr>
+<tr>
+<td>通訊</td>
+<td>telegram-bot, internal-comms, community-ops, marketing</td>
+</tr>
+<tr>
+<td>其他</td>
+<td>news-daily, chart-generator, translator, anomaly-detector, cost-tracker, executive-assistant, scheduler-generator, game-design-doc, dashboard-health, kiro-init</td>
+</tr>
+</tbody>
+</table>
+<h2 id="7">7. 資料流</h2>
+<h3 id="_1">使用者訊息處理流程</h3>
+<pre class="highlight"><code class="language-mermaid">sequenceDiagram
+    participant U as 👤 User
+    participant TG as Telegram Bot
+    participant H as Handler
+    participant R as A2A Router
+    participant PM as PM Agent
+    participant W as Worker Agent
+    participant DB as SQLite
+
+    U-&gt;&gt;TG: 傳送訊息
+    TG-&gt;&gt;H: handle_message()
+    H-&gt;&gt;H: 👀 Reaction + typing
+    H-&gt;&gt;R: route_message()
+    R-&gt;&gt;PM: delegate（預設入口）
+    PM-&gt;&gt;PM: 分析意圖
+    PM-&gt;&gt;W: delegate_task()
+    W-&gt;&gt;W: 執行任務
+    W-&gt;&gt;R: [DONE] / [PROGRESS]
+    R-&gt;&gt;PM: 結果回傳
+    PM-&gt;&gt;TG: reply()
+    TG-&gt;&gt;U: ✅ 回覆結果
+    H-&gt;&gt;DB: 記錄事件 + 成本
+</code></pre>
+
+<h3 id="_2">事件流</h3>
+<pre class="highlight"><code class="language-mermaid">graph TD
+    Action[任何操作] --&gt; Bus[EventBus]
+    Bus --&gt; Cost[CostTracker]
+    Bus --&gt; Audit[AuditLogger]
+    Bus --&gt; Health[HealthMonitor]
+    Bus --&gt; TG_Notify[TG Notification]
+</code></pre>
+
+<h2 id="8">8. 部署架構</h2>
+<pre class="highlight"><code class="language-mermaid">graph TB
+    subgraph Docker Compose
+        Backend[Backend Container&lt;br&gt;Python + FastAPI&lt;br&gt;:33333]
+        Web[Web Container&lt;br&gt;Next.js&lt;br&gt;:3000]
+    end
+
+    TG_API[Telegram API] --&gt;|polling| Backend
+    Browser[瀏覽器] --&gt; Web
+    Web --&gt;|proxy| Backend
+    Backend --&gt; SQLite[(SQLite DBs)]
+    Backend --&gt; Kiro[kiro-cli Agents]
+</code></pre>
+
+<p><strong>資料庫</strong>：
+- <code>data/platform.db</code> — 主資料庫（agents / issues / costs / schedules）
+- <code>data/memory.db</code> — Agent 記憶
+- <code>data/events.db</code> — 事件日誌</p>
+<h2 id="9">9. 設定檔說明</h2>
+<table>
+<thead>
+<tr>
+<th>檔案</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>team.yaml</code></td>
+<td>團隊定義（Agent 列表、權限、成本限制、TG 設定）</td>
+</tr>
+<tr>
+<td><code>scheduler.yaml</code></td>
+<td>排程任務（cron 表達式 + 執行目標）</td>
+</tr>
+<tr>
+<td><code>.env</code></td>
+<td>環境變數（API keys、Bot token）</td>
+</tr>
+<tr>
+<td><code>config/news_sources.yaml</code></td>
+<td>新聞來源設定</td>
+</tr>
+<tr>
+<td><code>.kiro/settings/mcp.json</code></td>
+<td>MCP 工具設定</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_3">附錄：快速啟動</h2>
+<pre class="highlight"><code class="language-bash"># 1. 環境準備
+cp .env.example .env
+# 填入 TELEGRAM_BOT_TOKEN, GEMINI_API_KEY
+
+# 2. 安裝依賴
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# 3. 啟動
+python start.py
+
+# 4. Docker 部署
+docker-compose -f docker-compose.prod.yml up -d
+</code></pre>
+<script>
+mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+// Convert fenced mermaid code blocks to mermaid divs
+document.querySelectorAll('code.language-mermaid').forEach(el => {
+  const pre = el.parentElement;
+  const div = document.createElement('pre');
+  div.className = 'mermaid';
+  div.textContent = el.textContent;
+  pre.replaceWith(div);
+});
+</script>
+</body>
+</html>
