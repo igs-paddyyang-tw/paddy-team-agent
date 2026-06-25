@@ -6,11 +6,11 @@
 
 ## 版本對應
 
-| ai-team-agent | ark-agent-team-builder | 功能 |
-|---------------|----------------------|------|
-| v1.0.0 | v2.0 | Phase 1-4 完成（任務生命週期 + 多 Runtime + Kanban + Multica） |
+| ai-team-agent | ark-agent-team-builder | ark-kiro-init | 功能 |
+|---------------|----------------------|---------------|------|
+| v1.0.0 | v2.1 | v2.1 | Phase 1-4 + 人格化 + 自我成長知識庫 |
 
-> **版號規則**：`ark-agent-team-builder` 採 `v2.X` 遞增。每次 generator 新增功能時 X+1，ai-team-agent 同步更新對應版本。
+> **版號規則**：`ark-agent-team-builder` 採 `v2.X`、`ark-kiro-init` 採 `v2.X` 遞增。
 
 ## 快速開始
 
