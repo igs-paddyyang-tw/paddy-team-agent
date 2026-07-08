@@ -7,7 +7,7 @@ graph TB
     U[使用者] -->|python start.py| D[daemon.py]
     D -->|讀取| C[team.yaml]
     D -->|啟動 N 個| K[kiro-cli instances]
-    D -->|啟動| API[api.py :13030]
+    D -->|啟動| API[api.py :33333]
     D -->|啟動| SCH[scheduler.py]
 
     K -->|stdio| MCP[mcp_server.py]
@@ -27,19 +27,19 @@ graph TB
         backend.write_mcp_config()   # 注入 MCP
         backend.build_command()      # 組裝命令
         process.start(cmd, cwd)      # 啟動 kiro-cli
-    → api.start(port=13030)          # HTTP server
+    → api.start(port=33333)          # HTTP server
     → scheduler.start()              # cron 排程
 
 Agent 間通訊：
   Agent A 呼叫 MCP tool "send_to_instance"
     → mcp_server.py 收到 JSON-RPC request
-    → HTTP POST http://localhost:13030/send/{target}
+    → HTTP POST http://localhost:33333/send/{target}
     → api.py 收到 → 寫入 target instance 的 stdin
     → target kiro-cli 收到訊息，開始處理
 
 排程觸發：
   scheduler.py cron 到點
-    → HTTP POST http://localhost:13030/send/{target}
+    → HTTP POST http://localhost:33333/send/{target}
     → 同上
 ```
 

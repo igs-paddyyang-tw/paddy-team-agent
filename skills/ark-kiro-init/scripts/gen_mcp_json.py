@@ -28,7 +28,7 @@ def gen_mcp_json(team_path: Path, output_base: Path | None = None) -> list[str]:
         cfg = yaml.safe_load(f) or {}
 
     base = output_base or team_path.parent
-    port = cfg.get("health_port", 13030)
+    port = cfg.get("health_port", 33333)
     instances = cfg.get("instances", {})
 
     # 所有非 admin instance 名稱（用於 allowed-targets）

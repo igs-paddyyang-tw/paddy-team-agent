@@ -54,7 +54,7 @@ class InstanceConfig:
 @dataclass
 class TeamConfig:
     instances: dict[str, InstanceConfig]
-    health_port: int = 13030
+    health_port: int = 33333
     model: str = "auto"
     timeout_minutes: int = 60
 

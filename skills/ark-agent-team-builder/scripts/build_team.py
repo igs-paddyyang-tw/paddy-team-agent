@@ -308,7 +308,7 @@ instances:
     role: worker
     skip_resume: false
 
-health_port: 13030
+health_port: 33333
 """
     (output_dir / "team.yaml").write_text(content, encoding="utf-8")
 
@@ -993,7 +993,7 @@ class InstanceConfig:
 class TeamConfig:
     name: str = "Agent Team"
     instances: dict[str, InstanceConfig] = field(default_factory=dict)
-    health_port: int = 13030
+    health_port: int = 33333
     model: str = "auto"
     channel: dict = field(default_factory=dict)
     access: dict = field(default_factory=dict)
@@ -1017,7 +1017,7 @@ def load_config(path: str | Path) -> TeamConfig:
     return TeamConfig(
         name=data.get("name", "Agent Team"),
         instances=instances,
-        health_port=data.get("health_port", 13030),
+        health_port=data.get("health_port", 33333),
         model=data.get("defaults", {}).get("model", "auto"),
         channel=data.get("channel", {}),
         access=data.get("access", {}),
@@ -1765,7 +1765,7 @@ async def api_restart(name: str):
     return {{"ok": True, "instance": name, "status": "restarted"}}
 
 
-async def start_api(host: str = "127.0.0.1", port: int = 13030) -> None:
+async def start_api(host: str = "127.0.0.1", port: int = 33333) -> None:
     config = uvicorn.Config(app, host=host, port=port, log_level="warning")
     server = uvicorn.Server(config)
     await server.serve()

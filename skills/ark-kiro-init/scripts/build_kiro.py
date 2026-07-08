@@ -69,7 +69,7 @@ def build_kiro(team_path: Path, output_base: Path | None = None) -> list[str]:
     all_names = list(instances.keys())
     non_admin_names = [n for n, v in instances.items()
                        if (v or {}).get("role") != "admin"]
-    port = cfg.get("health_port", 13030)
+    port = cfg.get("health_port", 33333)
     team_name = base.name
 
     created: list[str] = []

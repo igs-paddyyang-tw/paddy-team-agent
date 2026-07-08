@@ -18,7 +18,7 @@ class InstanceConfig:
 class TeamConfig:
     name: str = "Agent Team"
     instances: dict[str, InstanceConfig] = field(default_factory=dict)
-    health_port: int = 13030
+    health_port: int = 33333
     model: str = "auto"
     channel: dict = field(default_factory=dict)
     access: dict = field(default_factory=dict)
@@ -49,7 +49,7 @@ def load_config(path: str | Path) -> TeamConfig:
     return TeamConfig(
         name=data.get("name", "Agent Team"),
         instances=instances,
-        health_port=data.get("health_port", 13030),
+        health_port=data.get("health_port", 33333),
         model=data.get("defaults", {}).get("model", "auto"),
         channel=data.get("channel", {}),
         access=data.get("access", {}),

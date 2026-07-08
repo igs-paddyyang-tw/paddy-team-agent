@@ -20,4 +20,4 @@ hang_detector:
 instances:
 {instances_block}
 
-health_port: 13030
+health_port: 33333

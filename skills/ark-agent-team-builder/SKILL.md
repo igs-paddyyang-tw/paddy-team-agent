@@ -172,7 +172,7 @@ instances:
     description: "{emoji} {描述}"
     role: worker
 
-health_port: 13030                   # 第二個團隊用 23030 避免衝突
+health_port: 33333                   # 第二個團隊用 23030 避免衝突
 ```
 
 **填充規則：**
