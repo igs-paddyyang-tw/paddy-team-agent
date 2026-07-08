@@ -23,13 +23,17 @@ fileMatchPattern: "src/**/*.py"
 - **持久化**：壓縮後摘要寫入 MEMORY.md
 
 
-## 知識庫存取
+
+## 知識庫三層架構
 
 查詢知識時，依以下優先順序搜尋：
 
 1. **私有知識**：`knowledge/raw/` 和 `knowledge/wiki/`（你自己的記憶）
-2. **共用知識**：`knowledge/shared/wiki/`（所有 Agent 共用的通用知識）
-3. **專案知識**：`knowledge/hoyeah/wiki/`（HoYeah 遊戲專案知識）
+2. **共用知識**：`../../knowledge/shared/wiki/`（所有 Agent 共用的通用知識）
+3. **專案知識**：`../../knowledge/hoyeah/wiki/`（HoYeah 遊戲專案知識）
 
-寫入新記憶時，寫到 `knowledge/raw/`（私有）。
+> Agent 的 cwd 在 `agents/{name}-agent/`，全域知識庫在根目錄 `knowledge/`，
+> 用 `../../knowledge/` 往上跳兩層存取。
+
+寫入新記憶 → `knowledge/raw/`（私有）。
 引用知識時，標註來源層級：`[私有]`、`[共用]`、`[hoyeah]`。
