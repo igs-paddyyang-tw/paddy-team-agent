@@ -144,24 +144,9 @@ async def main() -> None:
             await tg_reply_fn(agent_name, _summarize_for_tg(agent_name, text))
 
     log.info("啟動 %d agents...", len(team_config.instances))
-    # 建立 symlink: agents/*/knowledge/{scope} → knowledge/{scope}
-    knowledge_root = Path("knowledge").resolve()
     for name, ic in team_config.instances.items():
         agent_cwd = Path(ic.working_directory).resolve()
         agent_cwd.mkdir(parents=True, exist_ok=True)
-        agent_kb = agent_cwd / "knowledge"
-        agent_kb.mkdir(parents=True, exist_ok=True)
-        # 對每個全域知識目錄建 symlink
-        if knowledge_root.exists():
-            for scope_dir in knowledge_root.iterdir():
-                if scope_dir.is_dir() and not scope_dir.name.startswith("."):
-                    link = agent_kb / scope_dir.name
-                    if not link.exists():
-                        try:
-                            link.symlink_to(scope_dir)
-                            log.debug("Symlink: %s → %s", link, scope_dir)
-                        except OSError:
-                            log.debug("Symlink failed: %s", link)
         proc = AgentProcess(
             name=name, working_dir=ic.working_directory,
             model=ic.model, skip_resume=ic.skip_resume,
