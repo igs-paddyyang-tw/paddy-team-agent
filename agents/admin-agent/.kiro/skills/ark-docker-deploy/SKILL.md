@@ -229,7 +229,7 @@ services:
     build: .
     command: python start.py
     env_file: .env
-    ports: ["13030:13030"]
+    ports: ["33333:33333"]
     restart: unless-stopped
 
   webbot:

@@ -39,7 +39,7 @@ metadata:
 ```python
 import httpx, asyncio, time
 
-BASE = "http://localhost:13030"
+BASE = "http://localhost:33333"
 
 async def check():
     results = []
@@ -94,6 +94,6 @@ API 全過時進一步檢查 HTML：
 
 ## 注意事項
 
-- 服務須已啟動（port 13030）
+- 服務須已啟動（port 33333）
 - SSE 只驗連線不等事件
 - 報告產出到 `docs/dashboard-health-report.md`

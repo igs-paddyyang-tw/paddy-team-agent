@@ -5,7 +5,7 @@
       "args": [
         "../../src/ark_team_core/team_mcp.py",
         "--port",
-        "13030",
+        "33333",
         "--instance",
         "admin-agent",
         "--role",
