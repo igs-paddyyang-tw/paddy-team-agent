@@ -60,7 +60,7 @@ User ─── Telegram / Web / API ─── Gateway :33333
                                       │
                          ┌────────────┼────────────┐
                          │            │            │
-                     pm-agent    coder-agent    qa-agent
+                     leader-agent    coder-agent    qa-agent
                      (leader)    (worker)       (worker)
 ```
 
@@ -101,7 +101,7 @@ ai-team-agent/
 | Agent | Role | 職責 |
 |-------|------|------|
 | admin-agent | 👑 admin | 服務管理、部署、團隊指揮 |
-| pm-agent | 🧠 leader | 需求分析、任務拆解、派工、驗收 |
+| leader-agent | 🧠 leader | 需求分析、任務拆解、派工、驗收 |
 | ai-dev-agent | 🤖 worker | AI 架構、Prompt 工程、Agent 設計 |
 | coder-agent | 💻 worker | 全端開發、API 實作 |
 | qa-agent | 🧪 worker | 測試、品質保證、Code Review |

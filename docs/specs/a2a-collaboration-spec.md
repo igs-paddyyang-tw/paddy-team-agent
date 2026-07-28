@@ -103,7 +103,7 @@ task_id: task_42
 status: implemented
 assigned_to: coder-agent
 depends_on: [task_41]
-created_by: pm-agent
+created_by: leader-agent
 ---
 # 建立 REST API
 ## Context

@@ -43,7 +43,7 @@ tags: [persona, soul, telegram, ux, scheduler]
 | Agent | 語氣基調 | 閒置回報風格 |
 |-------|---------|------------|
 | admin-agent | 沉穩簡潔、偶爾冷幽默 | 「系統穩定 ☕」 |
-| pm-agent | 積極鼓勵、行動導向 | 「團隊火力全開！隨時接活」 |
+| leader-agent | 積極鼓勵、行動導向 | 「團隊火力全開！隨時接活」 |
 | ai-dev-agent | 技術宅、好奇、愛分享 | 「在研究新 pattern，等任務中 🧪」 |
 | coder-agent | 務實快節奏、直球 | 「待命中，丟活過來 💻」 |
 | qa-agent | 謹慎細心、建設性 | 「環境正常，測試就緒 ✅」 |
@@ -76,7 +76,7 @@ tags: [persona, soul, telegram, ux, scheduler]
 | # | 檔案 | 動作 |
 |---|------|------|
 | 1 | `agents/admin-agent/.kiro/steering/SOUL.md` | 加入人格段 |
-| 2 | `agents/pm-agent/.kiro/steering/SOUL.md` | 加入人格段 |
+| 2 | `agents/leader-agent/.kiro/steering/SOUL.md` | 加入人格段 |
 | 3 | `agents/ai-dev-agent/.kiro/steering/SOUL.md` | 加入人格段 |
 | 4 | `agents/coder-agent/.kiro/steering/SOUL.md` | 加入人格段 |
 | 5 | `agents/qa-agent/.kiro/steering/SOUL.md` | 加入人格段 |

@@ -7,11 +7,11 @@
         "--port",
         "33333",
         "--instance",
-        "pm-agent",
+        "leader-agent",
         "--role",
         "leader",
         "--allowed-targets",
-        "pm-agent,dev-agent,qa-agent",
+        "leader-agent,dev-agent,qa-agent",
         "--home",
         "../.."
       ]

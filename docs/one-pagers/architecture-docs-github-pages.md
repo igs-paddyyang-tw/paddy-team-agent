@@ -5,7 +5,7 @@ status: draft
 created: 2026-06-24
 updated: 2026-06-24
 language: zh-TW
-author: pm-agent
+author: leader-agent
 ---
 
 # AI Team Agent 架構技術文件 — GitHub Pages 發佈
@@ -71,10 +71,10 @@ python scripts/build_architecture_html.py
 
 | # | 任務 | 負責 | 大小 | 驗收 |
 |---|------|------|------|------|
-| 1 | 撰寫 `docs/architecture.md` | pm-agent | M | 含 9 個章節，Mermaid 圖表 |
+| 1 | 撰寫 `docs/architecture.md` | leader-agent | M | 含 9 個章節，Mermaid 圖表 |
 | 2 | 建立 `scripts/build_architecture_html.py` | coder-agent | S | 執行後產出 `ai-team-agent.html` |
 | 3 | 產出 `ai-team-agent.html` 到根目錄 | coder-agent | XS | 可在瀏覽器直接開啟 |
-| 4 | GitHub Pages 設定說明 | pm-agent | XS | README 補充說明 |
+| 4 | GitHub Pages 設定說明 | leader-agent | XS | README 補充說明 |
 
 ## 風險
 

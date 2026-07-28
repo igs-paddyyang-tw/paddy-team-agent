@@ -154,13 +154,13 @@ kiro-cli 的 context window 有限（依模型 128K-200K tokens），長 session
 | Agent 角色 | 建議觸發點 | 理由 |
 |------------|-----------|------|
 | admin-agent | **85%** | 主要做監控/簡短指令，歷史可大量丟棄 |
-| pm-agent (leader) | **70%** | 需保留任務拆解、派工記錄、驗收標準，壓縮要早觸發以保留關鍵決策 |
+| leader-agent (leader) | **70%** | 需保留任務拆解、派工記錄、驗收標準，壓縮要早觸發以保留關鍵決策 |
 | dev-agent (worker) | **75%** | 需保留當前任務的程式碼上下文，但舊的完成任務可壓縮 |
 | qa-agent (worker) | **75%** | 需保留測試結果與 bug 記錄，舊通過的測試可壓縮 |
 
 ### 為什麼 Leader 要最早觸發（70%）？
 
-Leader (pm-agent) 的上下文最珍貴：
+Leader (leader-agent) 的上下文最珍貴：
 - 包含團隊派工的完整決策鏈（誰做什麼、為什麼這樣分配）
 - 包含需求澄清的對話歷史
 - 包含驗收標準定義
@@ -188,7 +188,7 @@ defaults:
   model: auto
   skip_resume: false
   context_compaction:
-    pm-agent: 70      # leader 最早觸發
+    leader-agent: 70      # leader 最早觸發
     dev-agent: 75     # worker 標準
     qa-agent: 75      # worker 標準
     admin-agent: 85   # admin 最晚觸發
@@ -205,7 +205,7 @@ defaults:
 | # | Instance | Role | 職責範圍 | 上下文壓縮 |
 |---|----------|------|----------|-----------|
 | 1 | admin-agent | admin | 服務監控、重啟、成本控制、系統健康 | 85% |
-| 2 | pm-agent | leader | 需求分析、任務拆解、派工、驗收、進度追蹤 | 70% |
+| 2 | leader-agent | leader | 需求分析、任務拆解、派工、驗收、進度追蹤 | 70% |
 | 3 | ai-dev-agent | worker | AI/ML 架構、Prompt 工程、Agent 設計、LLM 整合 | 75% |
 | 4 | coder-agent | worker | 全端開發、API 實作、程式碼產出、重構 | 75% |
 | 5 | qa-agent | worker | 測試撰寫、品質保證、Code Review、Bug 回報 | 75% |
@@ -222,7 +222,7 @@ defaults:
 ### 協作流程
 
 ```
-使用者 → pm-agent（leader）
+使用者 → leader-agent（leader）
               ├─ AI 相關任務 → ai-dev-agent
               ├─ 開發任務 → coder-agent
               ├─ 測試任務 → qa-agent
@@ -240,8 +240,8 @@ instances:
     role: admin
     skip_resume: false
 
-  pm-agent:
-    working_directory: agents/pm-agent
+  leader-agent:
+    working_directory: agents/leader-agent
     description: "🧠 Leader — 需求分析、派工、驗收"
     role: leader
     skip_resume: false
@@ -292,7 +292,7 @@ Leader 預期拆解：
 ### 驗證結果
 
 ```
-✅ 產出 5 人 team.yaml（admin-agent, pm-agent, ai-dev-agent, coder-agent, qa-agent）
+✅ 產出 5 人 team.yaml（admin-agent, leader-agent, ai-dev-agent, coder-agent, qa-agent）
 ✅ ark_team_core/ 產出 6 個 .py（__init__ + config + process + daemon + mcp_registry + scheduler）
 ✅ import 成功：from ark_team_core import CoreDaemon, AgentProcess, TeamConfig
 ✅ load_config('team.yaml') 正確解析 5 個 instances

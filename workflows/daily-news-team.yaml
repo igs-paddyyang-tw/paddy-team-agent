@@ -40,9 +40,9 @@ steps:
     params:
       message: "✅ 日報完成，推送到 Telegram"
     output: final
-    assignee: pm-agent
+    assignee: leader-agent
 
 autopilot:
   cron: "30 8 * * 1-5"
-  assignee: pm-agent
+  assignee: leader-agent
   enabled: false

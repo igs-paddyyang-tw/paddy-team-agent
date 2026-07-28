@@ -1,5 +1,5 @@
 ---
-title: "pm-agent Knowledge Schema"
+title: "leader-agent Knowledge Schema"
 type: system
 created: 2026-06-17
 updated: 2026-06-25

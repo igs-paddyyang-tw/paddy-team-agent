@@ -619,7 +619,7 @@ python scripts/validate_team.py
 ### 卡關時
 
 - 直接複製 `team.example.yaml` 改名為 `team.yaml`
-- 手動建目錄：`mkdir agents\pm-agent\docs agents\pm-agent\output agents\pm-agent\knowledge`
+- 手動建目錄：`mkdir agents\leader-agent\docs agents\leader-agent\output agents\leader-agent\knowledge`
 
 ---
 
@@ -714,7 +714,7 @@ async def main():
 
 | Agent 角色 | 觸發點 | 理由 |
 |------------|--------|------|
-| leader (pm-agent) | **70%** | 派工決策鏈最珍貴，早壓縮保留摘要空間 |
+| leader (leader-agent) | **70%** | 派工決策鏈最珍貴，早壓縮保留摘要空間 |
 | worker (dev/coder/qa) | **75%** | 保留當前任務上下文，完成的任務可壓縮 |
 | admin | **85%** | 多為短指令，歷史價值低 |
 

@@ -80,7 +80,7 @@ ark-kiro-init v2.0 模板已升級（人格+自我成長+多層知識庫），�
 
 | Skill | 補裝到 | 理由 |
 |-------|--------|------|
-| `ark-grill-me` | pm-agent, ai-dev-agent | Workshop 04 核心（設計拷問），leader/dev 必備 |
+| `ark-grill-me` | leader-agent, ai-dev-agent | Workshop 04 核心（設計拷問），leader/dev 必備 |
 | `ark-news-daily` | admin-agent | Workshop 教學用 + 排程日報能力 |
 | `ark-web-scraper` | coder-agent, ai-dev-agent | Workshop 01 核心（資料抓取） |
 
@@ -122,13 +122,13 @@ mkdir -p knowledge/shared/{raw,wiki}
 | 2 | `ark-kiro-init/assets/steering/SOUL-leader.md` | 補入 🎭 人格段 |
 | 3 | `ark-kiro-init/assets/steering/SOUL-worker.md` | 補入 🎭 人格段 |
 | 4 | `agents/admin-agent/.kiro/steering/SOUL.md` | 補入 📚 + 📂 |
-| 5 | `agents/pm-agent/.kiro/steering/SOUL.md` | 補入 📚 + 📂 |
+| 5 | `agents/leader-agent/.kiro/steering/SOUL.md` | 補入 📚 + 📂 |
 | 6 | `agents/ai-dev-agent/.kiro/steering/SOUL.md` | 補入 📚 + 📂 |
 | 7 | `agents/coder-agent/.kiro/steering/SOUL.md` | 補入 📚 + 📂 |
 | 8 | `agents/qa-agent/.kiro/steering/SOUL.md` | 補入 📚 + 📂 |
 | 9 | `agents/*/knowledge/schema.md` × 5 | 升級 v3.0 → v3.1 |
 | 10 | `knowledge/shared/` | 新建目錄 + schema + index + log |
-| 11 | `agents/pm-agent/.kiro/skills/ark-grill-me/` | 補裝 |
+| 11 | `agents/leader-agent/.kiro/skills/ark-grill-me/` | 補裝 |
 | 12 | `agents/ai-dev-agent/.kiro/skills/ark-grill-me/` | 補裝 |
 | 13 | `agents/ai-dev-agent/.kiro/skills/ark-web-scraper/` | 補裝 |
 | 14 | `agents/coder-agent/.kiro/skills/ark-web-scraper/` | 補裝 |
@@ -143,7 +143,7 @@ mkdir -p knowledge/shared/{raw,wiki}
 - [ ] 5 個 Agent SOUL.md 都有 🎭 + 📚 + 📂 三段
 - [ ] 5 個 Agent schema.md 都是 v3.1（含三層架構 + 自我成長規則）
 - [ ] `knowledge/shared/` 存在且有 schema + index + log
-- [ ] `ark-grill-me` 安裝在 pm-agent + ai-dev-agent
+- [ ] `ark-grill-me` 安裝在 leader-agent + ai-dev-agent
 - [ ] `ark-web-scraper` 安裝在 coder-agent + ai-dev-agent
 - [ ] `ark-news-daily` 安裝在 admin-agent
 - [ ] `ark-kiro-init` 模板 SOUL-*.md 都有 🎭 + 📚 + 📂

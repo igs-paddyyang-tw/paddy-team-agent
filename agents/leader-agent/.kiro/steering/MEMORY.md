@@ -1,4 +1,4 @@
-﻿# 🧠 pm-agent 專案記憶
+﻿# 🧠 leader-agent 專案記憶
 
 > 每完成一個段落必須更新。
 
@@ -17,7 +17,7 @@
 | Agent | 角色 | 狀態 |
 |-------|------|------|
 | admin-agent | 👑 Admin | idle |
-| pm-agent | 🧠 Leader | active |
+| leader-agent | 🧠 Leader | active |
 | ai-dev-agent | 🤖 AI Dev | 執行中 |
 | coder-agent | 💻 Coder | 執行中 |
 | qa-agent | 🧪 QA | 執行中 |

@@ -123,7 +123,7 @@ L1: /reset                          → 重置
 L2: /skill_id args                  → Skill 直接執行
 L3: keyword → 本地 Skill            → news_scraper / llm_cli / echo
 L4: keyword → 直達 team agent       → qa-agent / admin-agent
-L5: 深度關鍵字 → pm-agent 派工      → 規劃/分析/架構/重構
+L5: 深度關鍵字 → leader-agent 派工      → 規劃/分析/架構/重構
 L6: 預設 → Gemini API 快速回答      → fallback CLI
 ```
 
@@ -133,7 +133,7 @@ L6: 預設 → Gemini API 快速回答      → fallback CLI
 # team.yaml instances → DB 同步
 agents = {
     "admin-agent": {role: "admin", backend: "kiro", status: "idle"},
-    "pm-agent":    {role: "leader", backend: "gemini", status: "idle"},
+    "leader-agent":    {role: "leader", backend: "gemini", status: "idle"},
     "coder-agent": {role: "worker", backend: "kiro", status: "idle"},
     "ai-dev-agent":{role: "worker", backend: "kiro", status: "idle"},
     "qa-agent":    {role: "worker", backend: "kiro", status: "idle"},
@@ -221,7 +221,7 @@ class AgentProcess:
 instances:
   admin-agent:
     backend: kiro          # 需要完整工具鏈
-  pm-agent:
+  leader-agent:
     backend: gemini        # 分析+派工，快速回覆
   coder-agent:
     backend: kiro          # 需要寫檔案

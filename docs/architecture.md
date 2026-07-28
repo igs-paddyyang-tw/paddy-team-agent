@@ -132,7 +132,7 @@ ai-team-agent/
 | Agent | 角色 | 職責 | 工作目錄 |
 |-------|------|------|----------|
 | admin-agent | 👑 Admin | 服務管理、開發維護、團隊指揮 | `agents/admin-agent/` |
-| pm-agent | 🧠 Leader | 需求分析、派工、驗收 | `agents/pm-agent/` |
+| leader-agent | 🧠 Leader | 需求分析、派工、驗收 | `agents/leader-agent/` |
 | ai-dev-agent | 🤖 Worker | AI/ML 架構、Prompt 工程 | `agents/ai-dev-agent/` |
 | coder-agent | 💻 Worker | 全端開發、API 實作 | `agents/coder-agent/` |
 | qa-agent | 🧪 Worker | 測試、品質保證 | `agents/qa-agent/` |

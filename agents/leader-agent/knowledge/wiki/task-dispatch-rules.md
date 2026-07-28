@@ -22,8 +22,8 @@ PM Agent 將任務分派給團隊成員的四大原則：**能力匹配 → 負�
 | 程式開發 | dev-agent | — |
 | 程式碼審查 | review-agent | dev-agent |
 | 測試驗證 | qa-agent | dev-agent |
-| 文件撰寫 | doc-agent | pm-agent |
-| 架構設計 | dev-agent | pm-agent |
+| 文件撰寫 | doc-agent | leader-agent |
+| 架構設計 | dev-agent | leader-agent |
 
 **匹配邏輯**：
 1. 根據任務 `tags` 比對 Agent 的 `skills` 清單

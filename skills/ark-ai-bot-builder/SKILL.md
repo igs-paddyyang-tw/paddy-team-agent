@@ -33,7 +33,7 @@ ConversationPlanner（六層意圖路由，零 LLM 消耗）
     │       「新聞」→ news_scraper → news_renderer
     │       「寫程式」→ llm_cli（codegen）
     ├── L4: keyword → 直達 team agent（測試→qa / 部署→admin）
-    ├── L5: 深度關鍵字 → pm-agent 派工（規劃/分析/架構）
+    ├── L5: 深度關鍵字 → leader-agent 派工（規劃/分析/架構）
     └── L6: 預設 → Gemini API 快速回答（2-3s）
                 ↓ 失敗
             → llm_cli CLI fallback（5-30s）

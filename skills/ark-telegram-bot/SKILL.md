@@ -44,7 +44,7 @@ Telegram Bot 開發完整 SOP — 8 大模組（含推送通知）+ **Adapter �
 |------|------|------|--------|------|
 | `project_dir` | `str` | ✅ | — | 專案目錄 |
 | `package_name` | `str` | ✅ | — | Python 套件名（如 `game_analytics`） |
-| `default_target` | `str` | ❌ | `"pm-agent"` | 預設訊息路由目標 |
+| `default_target` | `str` | ❌ | `"leader-agent"` | 預設訊息路由目標 |
 
 ### 產出檔案
 

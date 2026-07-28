@@ -26,7 +26,7 @@ related_spec: "docs/specs/a2a-collaboration-spec.md"
 
 ```mermaid
 graph TB
-    User -->|派工| Leader[pm-agent]
+    User -->|派工| Leader[leader-agent]
     Leader -->|TaskHandoff| Router[A2A Router]
     
     Router --> Graph[Task Graph DAG]
@@ -261,7 +261,7 @@ class FeedbackLoop:
 
 ```
 1. User: "@leader 建立 Todo App"
-2. pm-agent 拆解為 3 個 TaskHandoff:
+2. leader-agent 拆解為 3 個 TaskHandoff:
    - task_1: ai-dev 設計 API spec (depends_on: [])
    - task_2: coder 實作 (depends_on: [task_1])
    - task_3: qa 測試 (depends_on: [task_2])

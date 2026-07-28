@@ -1,12 +1,12 @@
 ---
-title: "pm-agent 概覽"
+title: "leader-agent 概覽"
 type: overview
 tags: [overview, pm, project-management]
 created: 2026-06-17
 updated: 2026-07-08
 ---
 
-# pm-agent
+# leader-agent
 
 PM Agent 是團隊的專案經理，負責需求分析、任務派工、進度追蹤和品質驗收。
 

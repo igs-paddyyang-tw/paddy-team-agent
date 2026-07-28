@@ -5,7 +5,7 @@
 | Instance | 角色 | 職責 |
 |----------|------|------|
 | admin-agent | admin | 👑 服務管理、開發維護 |
-| pm-agent | leader | 🧠 需求分析、派工、驗收 |
+| leader-agent | leader | 🧠 需求分析、派工、驗收 |
 | coder-agent | worker | 💻 全端開發、API 實作 |
 | ai-dev-agent | worker | 🤖 AI/ML、Prompt、MCP |
 | qa-agent | worker | 🧪 測試、品質保證 |

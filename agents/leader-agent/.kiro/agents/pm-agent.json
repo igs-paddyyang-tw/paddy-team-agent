@@ -1,5 +1,5 @@
 {
-  "name": "pm-agent",
+  "name": "leader-agent",
   "description": "🧠 Leader — 需求分析、派工、驗收",
   "prompt": "file://.kiro/steering/SOUL.md",
   "model": "auto",

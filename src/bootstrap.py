@@ -315,7 +315,7 @@ async def main() -> None:
 
         AGENT_TITLES = {
             "admin-agent": "👑 管理員",
-            "pm-agent": "🧠 專案經理",
+            "leader-agent": "🧠 Leader",
             "ai-dev-agent": "🤖 AI工程師",
             "coder-agent": "💻 工程師",
             "qa-agent": "🧪 測試工程師",

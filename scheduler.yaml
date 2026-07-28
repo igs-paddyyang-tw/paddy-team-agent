@@ -16,7 +16,7 @@ jobs:
 
   # ── 每日摘要 ───────────────────────────────────────────────
   - id: daily-summary
-    target: pm-agent
+    target: leader-agent
     prompt: |
       📋 今日摘要。
       規則：

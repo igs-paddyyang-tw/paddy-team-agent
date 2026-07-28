@@ -33,8 +33,8 @@ status: mature
 
 ```
 Level 1: Agent 自己解決（retry、換方法）
-Level 2: [BLOCKER] → pm-agent 協調其他 Agent 幫忙
-Level 3: pm-agent 無法解決 → admin-agent 介入
+Level 2: [BLOCKER] → leader-agent 協調其他 Agent 幫忙
+Level 3: leader-agent 無法解決 → admin-agent 介入
 Level 4: admin-agent 無法解決 → 通知使用者（TG 訊息）
 ```
 
@@ -42,7 +42,7 @@ Level 4: admin-agent 無法解決 → 通知使用者（TG 訊息）
 
 ```yaml
 task_id: "2026-07-08_001_api-design"
-from_agent: "pm-agent"
+from_agent: "leader-agent"
 to_agent: "coder-agent"       # "auto" = 自動匹配
 title: "設計使用者管理 API"
 context: "需要 CRUD + 權限控制..."
@@ -52,7 +52,7 @@ priority: 2                    # 1=urgent 2=high 3=normal 4=low
 
 ## 禁止事項
 
-- ❌ Worker 之間不互相派工（一律透過 pm-agent）
+- ❌ Worker 之間不互相派工（一律透過 leader-agent）
 - ❌ 不在沒有 [DONE] 的情況下結束任務
 - ❌ 卡關超過 5 分鐘不回報
 - ❌ 不重複回報已完成的任務

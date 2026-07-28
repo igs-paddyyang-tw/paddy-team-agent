@@ -6,7 +6,7 @@
 
 | 檔案 | 標題 | 類型 | 狀態 |
 |------|------|------|------|
-| wiki/overview.md | pm-agent 概覽 | overview | — |
+| wiki/overview.md | leader-agent 概覽 | overview | — |
 | wiki/requirements-analysis-sop.md | 需求分析 SOP | concept | mature |
 | wiki/task-dispatch-rules.md | 派工規則 | concept | mature |
 | wiki/acceptance-criteria-template.md | 驗收標準模板 | concept | mature |

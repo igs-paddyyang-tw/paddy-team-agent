@@ -1,15 +1,15 @@
 "use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, Bot, MessageSquare, DollarSign, ScrollText, ListTodo, Settings } from "lucide-react";
+import { LayoutDashboard, Bot, MessageSquare, DollarSign, ScrollText, Kanban, Settings } from "lucide-react";
 
 const NAV = [
   { href: "/admin/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/admin/issues", label: "Issues", icon: Kanban },
   { href: "/admin/agents", label: "Agents", icon: Bot },
   { href: "/admin/sessions", label: "Sessions", icon: MessageSquare },
   { href: "/admin/costs", label: "Costs", icon: DollarSign },
   { href: "/admin/audit", label: "Audit", icon: ScrollText },
-  { href: "/admin/queue", label: "Queue", icon: ListTodo },
   { href: "/admin/settings", label: "Settings", icon: Settings },
 ];
 

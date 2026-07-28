@@ -138,7 +138,7 @@ related_specs:
 | Docker Compose 生產配置 | coder-agent | 4h | 全部 | `docker compose up` 一鍵啟動 |
 | E2E 自動化測試 | qa-agent | 6h | 全部 | CI 綠燈 |
 | 效能壓測 | qa-agent | 4h | 全部 | 50 agents / P95 < 200ms |
-| 文件更新 | pm-agent | 4h | 全部 | README + API docs + CHANGELOG |
+| 文件更新 | leader-agent | 4h | 全部 | README + API docs + CHANGELOG |
 | 安全性掃描 | qa-agent | 2h | 全部 | 0 critical issues |
 
 **Phase 6 交付物**：
@@ -216,7 +216,7 @@ related_specs:
 
 | 角色 | 職責 | 負荷 |
 |------|------|------|
-| pm-agent (leader) | 需求釐清、驗收、每日 standup | 20% |
+| leader-agent (leader) | 需求釐清、驗收、每日 standup | 20% |
 | ai-dev-agent | 架構設計、Event Bus、通知、AI 整合 | 100% W1-5 |
 | coder-agent | API 開發、TG 指令、CRUD、整合 | 100% W1-6 |
 | qa-agent | 測試、壓測、安全掃描 | 50% W1-4, 100% W5-6 |
@@ -229,8 +229,8 @@ related_specs:
 | 事件 | 通知對象 | 管道 | 頻率 |
 |------|----------|------|------|
 | 每日進度 | 全團隊 | TG Group /Daily Report topic | 每日 21:00 |
-| Phase 完成 | pm-agent + admin | TG 私訊 | 每週 |
-| Blocker 升級 | pm-agent | TG 即時通知 | 即時 |
+| Phase 完成 | leader-agent + admin | TG 私訊 | 每週 |
+| Blocker 升級 | leader-agent | TG 即時通知 | 即時 |
 | 風險觸發 | admin-agent | TG ⚠️ Alerts topic | 即時 |
 | MVP Demo | 全員 | 螢幕分享 | W3 + W6 |
 | 上線通知 | 全員 | TG 公告 | 一次 |

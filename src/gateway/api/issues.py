@@ -17,7 +17,7 @@ class IssueAssign(BaseModel):
     assignee: str
 
 class IssueStatusUpdate(BaseModel):
-    status: str  # completed | failed
+    status: str  # in_progress | completed | failed
     output: str = ""
 
 @router.get("")
@@ -73,8 +73,45 @@ async def assign_issue(issue_id: str, body: IssueAssign, request: Request):
     finally:
         await conn.close()
 
+@router.patch("/{issue_id}/status")
+async def update_issue_status(issue_id: str, body: IssueStatusUpdate, request: Request):
+    """通用狀態更新：pending / assigned / in_progress / completed / failed"""
+    conn = await get_async_db()
+    try:
+        now = now_iso()
+        valid_statuses = ("pending", "assigned", "in_progress", "completed", "failed")
+        status = body.status if body.status in valid_statuses else "pending"
+        if status in ("completed", "failed"):
+            await conn.execute(
+                "UPDATE issues SET status=?, completed_at=?, updated_at=? WHERE id=?",
+                (status, now, now, issue_id))
+        else:
+            await conn.execute(
+                "UPDATE issues SET status=?, updated_at=? WHERE id=?",
+                (status, now, issue_id))
+        await conn.commit()
+        bus = request.app.state.bus
+        event_map = {
+            "in_progress": EventType.TASK_ASSIGNED,
+            "completed": EventType.TASK_COMPLETED,
+            "failed": EventType.TASK_FAILED,
+        }
+        if status in event_map:
+            await bus.emit(Event(type=event_map[status],
+                                data={"issue_id": issue_id, "output": body.output}, source="api"))
+        # Failed → 自動退回 pending
+        if status == "failed":
+            await conn.execute(
+                "UPDATE issues SET status='pending', assignee=NULL, updated_at=? WHERE id=?",
+                (now, issue_id))
+            await conn.commit()
+        return await fetch_one(conn, "SELECT * FROM issues WHERE id=?", (issue_id,))
+    finally:
+        await conn.close()
+
 @router.patch("/{issue_id}/complete")
 async def complete_issue(issue_id: str, body: IssueStatusUpdate, request: Request):
+    """向後相容端點"""
     conn = await get_async_db()
     try:
         now = now_iso()
@@ -85,6 +122,11 @@ async def complete_issue(issue_id: str, body: IssueStatusUpdate, request: Reques
         bus = request.app.state.bus
         event_type = EventType.TASK_COMPLETED if status == "completed" else EventType.TASK_FAILED
         await bus.emit(Event(type=event_type, data={"issue_id": issue_id, "output": body.output}, source="api"))
+        if status == "failed":
+            await conn.execute(
+                "UPDATE issues SET status='pending', assignee=NULL, updated_at=? WHERE id=?",
+                (now, issue_id))
+            await conn.commit()
         return await fetch_one(conn, "SELECT * FROM issues WHERE id=?", (issue_id,))
     finally:
         await conn.close()
