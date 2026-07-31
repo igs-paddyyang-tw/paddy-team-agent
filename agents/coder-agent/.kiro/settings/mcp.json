@@ -1,19 +1,24 @@
 {
   "mcpServers": {
     "team": {
-      "command": "py",
+      "command": "/home/paddyyang/kiro-cli/projects/paddy-team-agent/.venv/bin/python3",
       "args": [
-        "../../src/ark_team_core/team_mcp.py",
+        "-m",
+        "ark_team_agent.team_mcp",
         "--port",
         "33333",
         "--instance",
-        "dev-agent",
+        "coder-agent",
         "--role",
         "worker",
-        "--allowed-targets",
-        "leader-agent,dev-agent,qa-agent",
         "--home",
-        "../.."
+        "/home/paddyyang/kiro-cli/projects/paddy-team-agent"
+      ]
+    },
+    "fetch": {
+      "command": "/home/paddyyang/.local/bin/uvx",
+      "args": [
+        "mcp-server-fetch"
       ]
     }
   }
