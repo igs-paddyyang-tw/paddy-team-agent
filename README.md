@@ -1,148 +1,108 @@
-# AI Team Agent `v1.0.0`
+# paddy-team-agent `v1.1.0`
 
-> 5 人 AI Agent 團隊管理平台 — 五層架構 + Multica 級任務管理 + 多 Runtime
->
-> 使用 [`ark-agent-team-builder`](skills/ark-agent-team-builder/) `v2.1` 產出
+> Paddy 個人 AI Agent 團隊 — 基於 [ark-team-agent](https://github.com/igs-paddyyang-tw/ark_team_agent) 套件
 
-## 版本對應
+[![Version](https://img.shields.io/badge/version-1.1.0-orange)](https://github.com/igs-paddyyang-tw/paddy-team-agent)
+[![ark-team-agent](https://img.shields.io/badge/ark--team--agent-1.0.0-blue)](https://github.com/igs-paddyyang-tw/ark_team_agent/releases/tag/v1.0.0)
 
-| ai-team-agent | ark-agent-team-builder | ark-kiro-init | 功能 |
-|---------------|----------------------|---------------|------|
-| v1.0.0 | v2.1 | v2.1 | Phase 1-4 + 人格化 + 自我成長知識庫 |
-
-> **版號規則**：`ark-agent-team-builder` 採 `v2.X`、`ark-kiro-init` 採 `v2.X` 遞增。
+---
 
 ## 快速開始
 
 ```bash
-git clone https://github.com/igs-paddyyang-tw/ai-team-agent.git
-cd ai-team-agent
+git clone https://github.com/igs-paddyyang-tw/paddy-team-agent.git
+cd paddy-team-agent
 python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
-cp .env.example .env   # 填入 TELEGRAM_BOT_TOKEN + GEMINI_API_KEY
-python start.py        # 一鍵啟動全平台
+pip install https://github.com/igs-paddyyang-tw/ark_team_agent/releases/download/v1.0.0/ark_team_agent-1.0.0-py3-none-any.whl
+cp .env.example .env   # 填入 TELEGRAM_BOT_TOKEN
+python start.py
 ```
 
-## 核心功能
+**需求**：Python ≥ 3.11、[Kiro CLI](https://kiro.dev) 已安裝
 
-| 功能 | 說明 |
-|------|------|
-| 任務生命週期 | 7 狀態機（BACKLOG→QUEUED→CLAIMED→EXECUTING→BLOCKED/FAILED→COMPLETED） |
-| 多 Runtime | auto-detect kiro-cli / claude-code / codex / multica，自動 fallback |
-| Kanban Web UI | `http://localhost:33333/board`（暗黑科技風格、10s 自動刷新） |
-| Autopilot | cron 排程自動建立任務 + 指定 assignee |
-| Telegram 指揮 | /board /assign /unblock /retry /runtimes /costs |
+---
 
-## 自動化工具
-
-| 工具 | 路徑 | 功能 |
-|------|------|------|
-| 取得 Chat ID | `scripts/get_chat_id.py` | 自動偵測 Telegram 使用者 ID |
-| 開機自啟 | `scripts/ai-team-agent.service` | systemd unit（Linux） |
-| 團隊日報 | `workflows/daily-news-team.yaml` | 4 Agent 接力 Workflow |
-| 知識庫監聽 | `src/coordinator/services/wiki_watcher.py` | raw/ 新增自動 ingest |
-| 排程 | `scheduler.yaml` | wiki-ingest 22:00 + daily-news 08:30 |
-
-## 五層架構
+## 架構
 
 ```
-L1 Entry        → API + Telegram + Web Board
-L2 OS           → TaskLifecycle + Autopilot + EventBus
-L3 Collaboration→ A2A Router + TaskGraph + Agent Discovery
-L4 Execution    → RuntimeRegistry + ProviderAdapter (4 providers)
-L5 Knowledge    → Wiki + Memory + Skill Evolution
+ark-team-agent（套件）
+        │  pip install
+        ▼
+paddy-team-agent（部署）
+├── team.yaml        # 團隊配置
+├── agents/          # 5 個 agent 工作目錄
+├── knowledge/       # 共享知識庫
+├── scheduler.yaml   # 排程設定
+└── start.py         # 5 行入口
 ```
 
-```
-User ─── Telegram / Web / API ─── Gateway :33333
-                                      │
-                                  Coordinator
-                                      │
-                         ┌────────────┼────────────┐
-                         │            │            │
-                     leader-agent    coder-agent    qa-agent
-                     (leader)    (worker)       (worker)
-```
-
-## 目錄結構
-
-```
-ai-team-agent/
-├── start.py                     # 入口
-├── team.yaml                    # 5 人團隊配置
-├── src/
-│   ├── gateway/                 # 入口層
-│   │   ├── api/                 # REST API（21 端點 + RBAC）
-│   │   ├── telegram/            # TG Bot（11 指令 + 通知 + InlineKeyboard）
-│   │   └── gemini_chat.py       # Gemini 秒回
-│   ├── coordinator/             # 協調層
-│   │   ├── a2a/                 # TaskGraph + Discovery + FeedbackLoop
-│   │   ├── db/                  # SQLite 7 表
-│   │   ├── events/              # EventBus（14 事件）
-│   │   └── services/            # cost_tracker + audit_logger + health
-│   ├── runtime/                 # 執行層
-│   │   ├── process.py           # kiro-cli spawn
-│   │   ├── daemon.py            # Agent 管理
-│   │   └── scheduler.py         # Cron 排程
-│   ├── business/                # 業務技能
-│   │   ├── news_scraper.py
-│   │   └── news_renderer.py
-│   └── bootstrap.py             # 啟動邏輯
-├── apps/web/                    # Web Dashboard（Next.js 8 頁面）
-├── agents/                      # 5 Agent 工作目錄
-├── knowledge/shared/            # A2A 共享記憶
-├── docs/                        # Specs + Designs + Plans
-├── Dockerfile
-└── docker-compose.prod.yml
-```
+---
 
 ## 團隊
 
 | Agent | Role | 職責 |
 |-------|------|------|
-| admin-agent | 👑 admin | 服務管理、部署、團隊指揮 |
+| admin-agent | 👑 admin | 服務管理、開發維護、團隊指揮 |
 | leader-agent | 🧠 leader | 需求分析、任務拆解、派工、驗收 |
-| ai-dev-agent | 🤖 worker | AI 架構、Prompt 工程、Agent 設計 |
-| coder-agent | 💻 worker | 全端開發、API 實作 |
+| ai-dev-agent | 🤖 worker | AI/ML 架構、Prompt 工程、Agent 設計 |
+| coder-agent | 💻 worker | 全端開發、API 實作、程式碼產出 |
 | qa-agent | 🧪 worker | 測試、品質保證、Code Review |
 
-## 功能
+---
 
-### Telegram Bot
+## 排程（scheduler.yaml）
+
+| Job | Cron | 說明 |
+|-----|------|------|
+| hourly-check | 每小時 09-21 點 | 團隊狀態回報 |
+| daily-summary | 21:00 | 今日摘要 |
+| daily-ops-report | 21:05 | 系統管理摘要 |
+| daily-knowledge-digest | 21:30 | 廣播知識沉澱 |
+| wiki-ingest | 22:00 | 知識庫自動 ingest |
+| daily-news | 08:30 週一~五 | 科技日報 |
+
+---
+
+## 目錄結構
 
 ```
-/status  /agents  /board  /costs  /queue  /assign  /stop  /retry  /logs  /help
+paddy-team-agent/
+├── start.py              # 入口（5 行）
+├── team.yaml             # 團隊配置
+├── scheduler.yaml        # 排程
+├── .env                  # 環境變數（不進版控）
+├── agents/               # Agent 工作目錄
+│   ├── admin-agent/
+│   ├── leader-agent/
+│   ├── ai-dev-agent/
+│   ├── coder-agent/
+│   └── qa-agent/
+├── knowledge/            # 共享知識庫
+│   └── shared/
+└── pyproject.toml        # v1.1.0
 ```
 
-智慧路由：簡單問題 → Gemini 秒回 / 複雜任務 → Agent 派工
+---
 
-### A2A 協作
+## 版本歷史
 
-- **TaskGraph**：DAG 依賴自動解鎖
-- **Discovery**：中英文 skills 匹配最佳 Agent
-- **FeedbackLoop**：qa 失敗 → coder 修 → qa 重測（max 3 輪）
-- **SharedMemory**：knowledge/shared/ 跨 agent context
+| 版本 | 日期 | 說明 |
+|------|------|------|
+| **v1.1.0** | 2026-07-31 | 改用 ark-team-agent 套件，移除自有 src/ |
+| v1.0.0 | 2026-07-29 | 補齊 wiki/memory/skill/runtime 子系統 |
 
-### Web Dashboard
+舊版 src/ 備份：`backup/src-legacy-v1.0.0` branch
 
-```bash
-cd apps/web && npm install && npm run dev  # → localhost:3000
-```
-
-8 頁面：Dashboard / Agents / Sessions / Costs / Audit / Queue / Settings
-
-## 部署
-
-```bash
-docker compose -f docker-compose.prod.yml up -d
-```
+---
 
 ## 相關 Repos
 
 | Repo | 說明 |
 |------|------|
-| [ark-agent-skills](https://github.com/igs-paddyyang-tw/ark-agent-skills) | 54 Skills + Builder |
-| [ai-workshop](https://github.com/igs-paddyyang-tw/ai-workshop) | 4 個 Workshop 教材 |
+| [ark_team_agent](https://github.com/igs-paddyyang-tw/ark_team_agent) | 框架套件（來源：nana-team-agent） |
+| [nana-team-agent](https://github.com/igs-paddyyang-tw/nana-team-agent) | 框架開發源 |
+
+---
 
 ## 授權
 
