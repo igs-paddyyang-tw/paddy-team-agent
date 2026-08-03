@@ -2,7 +2,7 @@ timezone: Asia/Taipei
 
 jobs:
   # ── 狀態回報 → 管理者私訊 ──────────────────────────────────
-  - id: hourly-check
+  - name: hourly-check
     target: admin-agent
     prompt: |
       ⏰ 確認團隊狀態並回報。
@@ -12,10 +12,9 @@ jobs:
       - 跟前次相同 → 不回報（靜默，不發 reply）
       - 禁止輸出 raw JSON、檔案內容、memory.md 原始文字
     cron: "0 9-21 * * *"
-    reply_to: private
 
   # ── 每日摘要 ───────────────────────────────────────────────
-  - id: daily-summary
+  - name: daily-summary
     target: leader-agent
     prompt: |
       📋 今日摘要。
@@ -24,10 +23,9 @@ jobs:
       - 無成果 → 一句友善話（如「今天休息日，明天繼續 💪」）
       - ≤ 100 字，不要輸出 raw 資料
     cron: "0 21 * * *"
-    reply_to: private
 
   # ── 系統管理摘要 → 管理者私訊 ──────────────────────────────
-  - id: daily-ops-report
+  - name: daily-ops-report
     target: admin-agent
     prompt: |
       📊 產出每日系統管理摘要（私訊回報）：
@@ -35,19 +33,17 @@ jobs:
       2. 今日重啟次數
       3. 錯誤通報
     cron: "5 21 * * *"
-    reply_to: private
 
   # ── 每日知識沉澱 → 廣播全員 ─────────────────────────────────
-  - id: daily-knowledge-digest
+  - name: daily-knowledge-digest
     target: admin-agent
     prompt: |
       請用 broadcast_all 廣播：
       「📚 每日知識沉澱時間！請整理今日學到的知識，寫入 knowledge/wiki/。」
     cron: "30 21 * * *"
-    reply_to: private
 
   # ── 知識庫自動 ingest（每日 22:00）─────────────────────────
-  - id: wiki-ingest
+  - name: wiki-ingest
     target: admin-agent
     prompt: |
       📚 執行知識庫 ingest：
@@ -56,10 +52,9 @@ jobs:
       3. 對根目錄 knowledge/raw/ 執行 ingest → 產出 wiki/
       4. 回報：新增幾篇、更新幾篇
     cron: "0 22 * * *"
-    reply_to: private
 
   # ── 科技日報自動產出（每日 08:30）────────────────────────────
-  - id: daily-news
+  - name: daily-news
     target: ai-dev-agent
     prompt: |
       📰 產出今日科技日報：
@@ -68,4 +63,3 @@ jobs:
       3. 產出 HTML 日報 → output/news/
       4. 推送摘要到 Telegram
     cron: "30 8 * * 1-5"
-    reply_to: private
