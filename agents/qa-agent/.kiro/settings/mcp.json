@@ -1,7 +1,7 @@
 {
   "mcpServers": {
     "team": {
-      "command": "/home/paddyyang/kiro-cli/projects/paddy-team-agent/.venv/bin/python3",
+      "command": "/home/paddyyang/kiro-cli/projects/paddy-team-agent/.venv/bin/python",
       "args": [
         "-m",
         "ark_team_agent.team_mcp",

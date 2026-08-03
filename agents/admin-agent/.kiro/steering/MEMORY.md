@@ -12,13 +12,21 @@
 
 ### 高優先
 
-- [ ] 確認所有 agent 配置完整
+- [x] 確認所有 agent 配置完整（2026-08-01 完成）
 
 ### 低優先
 
-- [ ] 建立部署 SOP
+- [x] 建立部署 SOP（2026-08-02 完成 → docs/deploy-sop.md）
 
 ## 近期進度
+
+## 2026-08-01 — Agent 配置完整性檢查
+
+- ✅ 5 agent 全部有 .kiro/steering/（SOUL + TEAM + AGENTS + KIRO + USER + MEMORY）
+- ✅ instances/ 目錄 5 個 agent 皆已註冊
+- ✅ admin-agent 有 14 個 Skills
+- ⚠️ TEAM.md 列出 cto-agent 但無獨立目錄（屬 admin workspace 本身，正常）
+- 結論：團隊配置完整，無缺失
 
 ## 2026-06-17 — 初始化 admin-agent workspace
 
