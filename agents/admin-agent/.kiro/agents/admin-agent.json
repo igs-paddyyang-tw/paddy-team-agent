@@ -1,12 +1,12 @@
 {
   "name": "admin-agent",
   "description": "👑 Admin — 服務管理、開發維護、團隊指揮",
-  "prompt": "file://.kiro/steering/SOUL.md",
+  "prompt": "file://../../.kiro/steering/SOUL.md",
   "model": "auto",
   "tools": ["*"],
   "allowedTools": ["*"],
   "resources": [
-    "file://.kiro/steering/**/*.md",
+    "file://../../.kiro/steering/**/*.md",
     "skill://.kiro/skills/**/SKILL.md",
     {
       "type": "knowledgeBase",
