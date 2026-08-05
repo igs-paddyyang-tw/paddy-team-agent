@@ -43,7 +43,10 @@ paddy-team-agent/
 
 - `scheduler.yaml` 欄位：`id` → `name`（套件 ScheduledJobConfig 只有 name）
 - agent json 路徑：`file://.kiro/` → `file://../../.kiro/`（從 `.kiro/agents/` 往上兩層才到 agent 根目錄）
-- leader-agent json 檔名是 `pm-agent.json`（舊命名遺留，不影響運作）
+- ~~leader-agent json 檔名是 `pm-agent.json`（舊命名遺留，不影響運作）~~
+  → 2026-08-05 已改名為 `leader-agent.json`。安全的原因：`backend._write_agent_json`
+  找不到 source（三個候選路徑都不存在）就直接 return，所以這個檔從來不會被自動重寫；
+  且 `agent_json` policy 是 `once`，改名後也不會再被產生第二份。
 
 ## 版本歷史
 

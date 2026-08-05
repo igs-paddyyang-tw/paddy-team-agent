@@ -34,7 +34,7 @@
 | Instance | role | 工作目錄 |
 |---|---|---|
 | `admin-agent` | admin | `agents/admin-agent/` |
-| `leader-agent` | leader | `agents/leader-agent/`（json 檔名是 `pm-agent.json`，舊命名遺留） |
+| `leader-agent` | leader | `agents/leader-agent/` |
 | `ai-dev-agent` | worker | `agents/ai-dev-agent/` |
 | `coder-agent` | worker | `agents/coder-agent/` |
 | `qa-agent` | worker | `agents/qa-agent/` |
@@ -52,7 +52,7 @@
 | `.kiro/steering/*.md` | 行為規範與記憶，Kiro 依 frontmatter 的 `inclusion` 自動載入 | ✋ 手寫 |
 | `.kiro/prompts/*.md` | 可重用提詞模板（本專案 2 個），Kiro 內以 `@檔名` 呼叫 | ✋ 手寫 |
 | `.kiro/agents/admin-agent.json` | agent 身分註冊檔（本專案僅 `name`/`description`/`role` 三欄） | ✋ 手寫 |
-| `.kiro/skills/` | **空的** — v1.1.0 定版時清掉，Kiro 側目前沒有 skill | — |
+| `.kiro/skills/` | **根目錄這層是空的**（v1.1.0 清掉）。**但每個 agent 各自有 10～14 個 skill** 在 `agents/{name}/.kiro/skills/` | ✋ 手寫 |
 | `.kiro/hooks/` | 不存在（本專案沒有 hook） | — |
 | `.claude/skills/` | 57 個 ark-* skills，外部 clone，已 gitignore | `git pull` |
 

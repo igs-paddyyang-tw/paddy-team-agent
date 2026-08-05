@@ -1,15 +1,29 @@
 # 團隊運作規範
 
 > 本文件反映實際權限與團隊組成。
+>
+> ⚠️ **這個路徑（專案根目錄）的 TEAM.md 不會自動產生。**
+> `backend.write_team_context` 寫入的是各 agent 的 `working_directory`，
+> 也就是 `agents/{name}/.kiro/steering/TEAM.md`（每次服務啟動重新產生）。
+> 根目錄這份自 2026-07-28 起無人維護，2026-08-05 手動校正為與 `team.yaml` 一致。
+>
+> 它只在有人於專案根目錄手動執行 `kiro-cli` 時才會被讀到。
+> **成員異動請改 `team.yaml` 並重啟服務**，然後手動同步本檔。
 
 ## 團隊成員
 
-| Instance | 角色 | 職責 |
-|----------|------|------|
-| admin-agent | admin | ⚙️ Admin — 服務監控、重啟、成本控制 |
-| leader-agent | leader | 🧠 Leader — 需求分析、派工、驗收 |
-| dev-agent | worker | 💻 Developer — 全端開發 |
-| qa-agent | worker | 🧪 QA — 測試、品質保證 |
+以 `team.yaml` 的 `instances` 為準（5 個）：
+
+| Instance | 角色 | 職責 | 工作目錄 |
+|----------|------|------|---------|
+| admin-agent | admin | ⚙️ Admin — 服務監控、重啟、成本控制 | `agents/admin-agent/` |
+| leader-agent | leader | 🧠 Leader — 需求分析、派工、驗收 | `agents/leader-agent/` |
+| ai-dev-agent | worker | 🤖 AI Dev — AI/ML 架構、Prompt 工程、Agent 設計 | `agents/ai-dev-agent/` |
+| coder-agent | worker | 💻 Coder — 全端開發、API 實作、程式碼產出 | `agents/coder-agent/` |
+| qa-agent | worker | 🧪 QA — 測試、品質保證、Code Review | `agents/qa-agent/` |
+
+> 舊版本此表列有 `dev-agent`，該 instance **不存在**於 `team.yaml`；
+> v1.1.0 已拆為 `ai-dev-agent` 與 `coder-agent`。
 
 ## 指揮鏈
 
