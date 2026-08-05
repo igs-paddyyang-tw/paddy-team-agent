@@ -15,3 +15,7 @@ secrets/
 !secrets/README.md
 .DS_Store
 Thumbs.db
+
+# Claude Code skills — 外部 clone，不進本 repo 版控
+# 還原：git clone --depth 1 https://github.com/igs-paddyyang-tw/ark-agent-skills.git .claude/skills
+.claude/skills/
