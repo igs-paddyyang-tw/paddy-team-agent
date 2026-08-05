@@ -45,6 +45,42 @@
 
 > 原為 Kiro 的 `inclusion: fileMatch` / `src/**/*.py` 條件載入。本專案 v1.1.0 定版已刪除 `src/`，故不建 `src/CLAUDE.md`。
 
+## `.kiro/` 目錄地圖（做 agent／提詞開發時看這裡）
+
+| 路徑 | 放什麼 | 誰維護 |
+|---|---|---|
+| `.kiro/steering/*.md` | 行為規範與記憶，Kiro 依 frontmatter 的 `inclusion` 自動載入 | ✋ 手寫 |
+| `.kiro/prompts/*.md` | 可重用提詞模板（本專案 2 個），Kiro 內以 `@檔名` 呼叫 | ✋ 手寫 |
+| `.kiro/agents/admin-agent.json` | agent 身分註冊檔（本專案僅 `name`/`description`/`role` 三欄） | ✋ 手寫 |
+| `.kiro/skills/` | **空的** — v1.1.0 定版時清掉，Kiro 側目前沒有 skill | — |
+| `.kiro/hooks/` | 不存在（本專案沒有 hook） | — |
+| `.claude/skills/` | 57 個 ark-* skills，外部 clone，已 gitignore | `git pull` |
+
+### 🚨 根目錄的 `.kiro/` 有兩個孤兒檔，執行期都不讀
+
+產生器（`backend.py`）寫入的是**每個 agent 的 `working_directory`**，本專案 admin-agent 的是 `agents/admin-agent`，所以根目錄那份沒人維護也沒人使用：
+
+| 檔案 | 根目錄那份 | 真正在用的 |
+|---|---|---|
+| `TEAM.md` | ❌ 孤兒（停在 2026-07-28） | `agents/{name}/.kiro/steering/TEAM.md` |
+| `settings/mcp.json` | ❌ 孤兒（不被覆寫，也不被讀） | `agents/{name}/.kiro/settings/mcp.json` |
+
+> 兩份都是每次服務啟動時由 `write_team_context` / `_write_mcp_config` 重新產生到 agent 目錄下，**手改 agent 目錄下的版本會被覆寫**。
+>
+> 改設定的正確位置：成員→`team.yaml`、MCP→`backend.py` 的注入邏輯、排程→`scheduler.yaml`。
+>
+> 註：根目錄 `.kiro/settings/mcp.json` 曾有 `command: "py"` 與已刪除的 `src/` 路徑（2026-08-05 修正）。因為它是孤兒檔，**Kiro 執行期並未受影響**；修正的實際意義是本專案的 `.mcp.json`（Claude Code 用）由它複製而來。
+
+### 提詞模板格式（`.kiro/prompts/*.md`）
+
+純 Markdown，**無 frontmatter**，直接寫指示；Kiro 內以 `@route-message` 這樣呼叫。
+
+> Claude Code 側的對應是 `.claude/commands/*.md` — 需要 YAML frontmatter（`description`、`argument-hint`），參數用 `$ARGUMENTS`。兩邊格式不同，不能互相複製。
+
+### Agent 註冊檔的 `file://` 陷阱
+
+若要在 `.kiro/agents/*.json` 用 `file://` 引用資源，解析基準是 `.kiro/agents/`，必須往上兩層 —— `file://../../.kiro/steering/SOUL.md`；寫成 `file://.kiro/...` 會失效（踩坑紀錄見 `MEMORY.md`）。
+
 ## 團隊執行
 
 | 項目 | 值 |
