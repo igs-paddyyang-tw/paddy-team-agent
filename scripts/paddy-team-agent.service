@@ -1,0 +1,16 @@
+[Unit]
+Description=Paddy Team Agent (5 AI Agents + API + Telegram)
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/paddyyang/kiro-cli/projects/paddy-team-agent
+ExecStart=/home/paddyyang/kiro-cli/projects/paddy-team-agent/.venv/bin/python start.py
+Restart=always
+RestartSec=10
+Environment=PYTHONUNBUFFERED=1
+Environment=PATH=/home/paddyyang/.local/bin:/usr/local/bin:/usr/bin:/bin
+EnvironmentFile=/home/paddyyang/kiro-cli/projects/paddy-team-agent/.env
+
+[Install]
+WantedBy=default.target

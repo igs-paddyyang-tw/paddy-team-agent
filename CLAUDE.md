@@ -85,11 +85,28 @@
 
 | 項目 | 值 |
 |---|---|
+| 常駐方式 | **systemd user service**（`paddy-team-agent.service`，`Restart=always`） |
 | MCP server | `team` @ port 33333（見 `.mcp.json`） |
-| 入口 | `.venv/bin/python3 start.py` |
-| 團隊組成 | 4 agents：admin / leader / dev / qa |
+| 入口 | `.venv/bin/python start.py`（由 systemd 呼叫，不要手動前景執行） |
+| 團隊組成 | 5 agents：admin / leader / ai-dev / coder / qa（以 `team.yaml` 為準） |
 | 指揮鏈 | 使用者 → admin → leader → worker |
 | 套件 | `ark_team_agent` 1.0.1（`.venv`） |
+
+### 服務管理
+
+```bash
+systemctl --user status  paddy-team-agent      # 狀態（含 5 個 kiro-cli 子程序）
+systemctl --user restart paddy-team-agent      # 改 team.yaml / steering 後重啟
+systemctl --user stop    paddy-team-agent
+journalctl --user -u paddy-team-agent -f       # 看 log
+```
+
+- Unit 檔本體在 `~/.config/systemd/user/paddy-team-agent.service`，版控備份在 `scripts/paddy-team-agent.service`（機器重建時複製回去 → `systemctl --user daemon-reload && systemctl --user enable --now paddy-team-agent`）
+- `loginctl enable-linger` 已啟用，登出後服務不中斷
+- `PATH` 必須含 `~/.local/bin`（`kiro-cli` 在那裡），unit 檔已寫死
+- 與 `aiops` / `director` / `ninja-bot` / `ninja-team` 同一套管理方式
+
+> ⚠️ **不要用 `python start.py` 手動前景啟動** — 會與 systemd 搶 port 33333，且終端關閉即死。
 
 MCP 工具（`reply` / `send_to_instance` / `delegate_task` / `query_team_status` / `broadcast_all` / `wiki_query` 等）需 `team` server 連線後才可用。
 
