@@ -4,7 +4,7 @@
 
 @.kiro/steering/SOUL.md
 @.kiro/steering/AGENTS.md
-@.kiro/steering/TEAM.md
+@agents/admin-agent/.kiro/steering/TEAM.md
 @.kiro/steering/USER.md
 @.kiro/steering/MEMORY.md
 
@@ -14,11 +14,22 @@
 
 `.kiro/steering/` 是**單一真實來源**，Kiro 與 Claude Code 共用同一份，避免雙軌期間規範分歧。
 
-⚠️ `TEAM.md` 由服務啟動時**自動產生**（`ark_team_agent.backend.write_team_context`，policy=always），手動修改會被覆寫 — 成員變更一律改 `team.yaml` 後重啟。
+## ⚠️ `TEAM.md` 有兩份，只有 agent 目錄下的那份是活的
 
-## 🚨 已知不一致：`TEAM.md` 過期（2026-08-04）
+`TEAM.md` 由服務啟動時自動產生（`ark_team_agent.backend.write_team_context`，policy=always），手動修改會被覆寫 — 成員變更一律改 `team.yaml` 後重啟。
 
-**以 `team.yaml` 為準。** 現行 5 agents：
+**但產生器寫的是每個 agent 自己的 working_directory，不是專案根目錄：**
+
+| 路徑 | 狀態 |
+|---|---|
+| `agents/{name}/.kiro/steering/TEAM.md` | ✅ **活的** — 每次啟動重新產生，反映 `team.yaml` |
+| `.kiro/steering/TEAM.md` | ❌ **孤兒檔** — 最後寫入 2026-07-28，沒有任何機制會更新它 |
+
+根目錄那份仍是 v1.1.0 改名前的舊版（只列 4 個、含不存在的 `dev-agent`），**不要引用它**。本檔的 `@` 匯入已指向 `agents/admin-agent/.kiro/steering/TEAM.md`。
+
+### 讀 TEAM.md 時的注意事項
+
+產生出來的表會多一列 `cto-agent`（標「本 workspace」），那是**套件硬編碼**的（`backend.py` 的 `Always include cto-agent`），代表 workspace 本體而非真的 agent — **paddy 沒有 cto-agent**。以 `team.yaml` 的 5 個為準：
 
 | Instance | role | 工作目錄 |
 |---|---|---|
@@ -27,10 +38,6 @@
 | `ai-dev-agent` | worker | `agents/ai-dev-agent/` |
 | `coder-agent` | worker | `agents/coder-agent/` |
 | `qa-agent` | worker | `agents/qa-agent/` |
-
-`.kiro/steering/TEAM.md` 目前仍是 v1.1.0 改名前的舊版：只列 4 個，且含**不存在的 `dev-agent`**，缺 `ai-dev-agent` 與 `coder-agent`。原因是服務自 2026-08-03 停機後未重啟，TEAM.md 沒有重新產生。
-
-**修法：** 重啟服務（`.venv/bin/python3 start.py`）讓 TEAM.md 自動重新產生後，刪除本節。**不要手改 TEAM.md。**
 
 ## Python 程式碼規範
 
