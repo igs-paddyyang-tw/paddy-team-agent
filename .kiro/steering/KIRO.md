@@ -1,11 +1,15 @@
 ---
 inclusion: fileMatch
-fileMatchPattern: "src/**/*.py"
+fileMatchPattern: "scripts/**/*.py,start.py"
 ---
 
 # 🤖 Python 程式碼規範
 
-> 只在讀寫 `src/` 下的 .py 檔案時自動載入。
+> 只在讀寫本專案自有的 .py 檔案時自動載入（`scripts/`、`start.py`）。
+>
+> ⚠️ 2026-08-05 修正：原 pattern 為 `src/**/*.py`，但 v1.1.0 定版已移除自有 `src/`
+> （改依賴 `ark_team_agent` 套件），該 pattern 永不命中、整份規範從未載入。
+> Claude Code 側由根目錄 `CLAUDE.md` 指路（寫 `.py` 前先讀本檔）。
 
 ---
 
