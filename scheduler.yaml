@@ -54,21 +54,13 @@ jobs:
     cron: "0 22 * * *"
 
   # ── 科技日報自動產出（平日 08:30）────────────────────────────
-  #
-  # ⚠️ 2026-08-05：ark_team_agent 的排程器只解析 cron 的「分 時」兩欄，
-  #    日/月/星期三欄會被靜默忽略（scheduler.py:48-79 docstring 自述
-  #    "only minute + hour used"）。因此 "1-5" 不會生效，此 job 實際
-  #    每天都會觸發，包含週六日。
-  #
-  #    在套件修好之前，改由 prompt 自行判斷平日並提早結束 —— 週末仍會
-  #    喚醒 agent（有少量成本），但不會產出日報、也不會推送到 Telegram。
-  #    套件改用 apscheduler 的 CronTrigger 後，可移除下方第 1 條規則。
+  # 2026-08-05：ark_team_agent 1.0.4 起改用 apscheduler 的 CronTrigger，
+  # cron 的日/月/星期欄位已真正生效，"1-5" 週末不會觸發。
+  # 先前為繞過此問題而加在 prompt 裡的平日判斷已移除。
   - name: daily-news
     target: ai-dev-agent
     prompt: |
       📰 產出今日科技日報：
-      0. 先確認今天是星期幾。若為星期六或星期日，**立即停止**，
-         只回覆「🛌 週末不產日報」，不要執行以下任何步驟、不要推送 Telegram。
       1. 抓取 Hacker News + TechCrunch 頭條
       2. 分類（AI / 程式語言 / 綜合科技）
       3. 產出 HTML 日報 → output/news/
